@@ -1,0 +1,113 @@
+:root {
+  /* backgrounds */
+  --screenBg: #1976D2;
+  --contentBg: #F0F6FF;
+
+  /* cards */
+  --card: #FFFFFF;
+  --cardIcon: #E8F1FF;
+  --sectionCard: #FFFFFF;
+
+  /* text */
+  --text: #1A3A5C;
+  --subtext: #5A7A96;
+  --sectionHeader: #1976D2;
+  --itemTitle: #0D2137;
+  --itemDescription: #8A9BB0;
+  --pageTitle: #EFF6FF;
+  --pageSubtitle: #BFDBFE;
+
+  /* misc */
+  --sideLine: rgba(255, 255, 255, 0.4);
+  --chevron: #93C4E8;
+  --headerBg: #DBEAFE;
+  --selectedBorder: #1976D2;
+  --selectedBg: #EFF6FF;
+  --selectedText: #1976D2;
+
+  /* buttons */
+  --buttonBackground: #1976D2;
+  --buttonTextColor: #FFFFFF;
+
+  /* search bar */
+  --searchBarBg: #FFFFFF;
+  --searchBarBorder: rgba(25, 118, 210, 0.18);
+  --searchBarText: #0D2137;
+  --searchBarPlaceholder: #93AFC8;
+
+  /* tab bar */
+  --tabBarBg: #FFFFFF;
+  --tabBarActive: #1976D2;
+  --tabBarInactive: #94A3B8;
+
+  /* card action buttons */
+  --cardButtonText: #1976D2;
+  --cardButtonBorder: #DBEAFE;
+  --cardButtonDivider: #DBEAFE;
+
+  /* status pills */
+  --pillNightBg: #EDE9FE;
+  --pillNightText: #4C1D95;
+  --pillOnCallBg: #DCFCE7;
+  --pillOnCallText: #14532D;
+
+  /* schedule */
+  --scheduleAlwaysOpenBg: #F0FDF4;
+}
+
+[data-theme="dark"] {
+  /* backgrounds */
+  --screenBg: #1E3A6E;
+  --contentBg: #0F1F3D;
+
+  /* cards */
+  --card: #172D56;
+  --cardIcon: #112244;
+  --sectionCard: #172D56;
+
+  /* text */
+  --text: #E8F1FF;
+  --subtext: #94B4D4;
+  --sectionHeader: #60A5FA;
+  --itemTitle: #F0F7FF;
+  --itemDescription: #6B8CAE;
+  --pageTitle: #F0F7FF;
+  --pageSubtitle: #93C4E8;
+
+  /* misc */
+  --sideLine: rgba(255, 255, 255, 0.12);
+  --chevron: #4A7AAA;
+  --headerBg: #112244;
+  --selectedBorder: #60A5FA;
+  --selectedBg: #162B50;
+  --selectedText: #60A5FA;
+
+  /* buttons */
+  --buttonBackground: #2563EB;
+  --buttonTextColor: #FFFFFF;
+
+  /* search bar */
+  --searchBarBg: #172D56;
+  --searchBarBorder: rgba(96, 165, 250, 0.2);
+  --searchBarText: #C0D4EC;
+  --searchBarPlaceholder: #4A6A8A;
+
+  /* tab bar */
+  --tabBarBg: #1E3A6E;
+  --tabBarActive: #60A5FA;
+  --tabBarInactive: #3A5070;
+
+  /* card action buttons */
+  --cardButtonText: #93C4E8;
+  --cardButtonBorder: rgba(96, 165, 250, 0.15);
+  --cardButtonDivider: rgba(96, 165, 250, 0.15);
+
+  /* status pills */
+  --pillNightBg: #1E1B4B;
+  --pillNightText: #A5B4FC;
+  --pillOnCallBg: #052E16;
+  --pillOnCallText: #4ADE80;
+
+  /* schedule */
+  --scheduleAlwaysOpenBg: #052E16;
+}

@@ -1,0 +1,21 @@
+.wrapper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--cardIcon);
+  border: 1px solid var(--searchBarBorder);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.b1 { width: 320px; height: 320px; top: -100px; left: -80px; }
+.b2 { width: 200px; height: 200px; top: 120px; right: 60px; }
+.b3 { width: 140px; height: 140px; bottom: 100px; left: 160px; }
+.b4 { width: 90px;  height: 90px;  bottom: 40px;  right: 240px; }
+.b5 { width: 250px; height: 250px; bottom: -80px; right: -60px; }

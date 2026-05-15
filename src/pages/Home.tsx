@@ -1,3 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Home() {
-  return <div className="text-white">Home</div>;
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <div className="Container">Hi</div>
+    </div>
+  );
 }
