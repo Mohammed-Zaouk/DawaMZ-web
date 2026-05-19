@@ -12,6 +12,7 @@
   border-bottom: 1px solid var(--cardButtonBorder);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  overflow: visible;
 }
 
 /* ── Brand ── */
@@ -20,17 +21,28 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  flex-shrink: 0;
+  line-height: 1;
 }
 .logo {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  /* Keep the image pixel-sharp and vertically centred */
+  position: relative;
+  top: 0;
 }
 .brandText {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.2px;
   color: var(--pageTitle);
+  line-height: 1;
+  /* Optically align text baseline with the logo centre */
+  display: flex;
+  align-items: center;
 }
 .accent {
   color: var(--pageTitle);
@@ -41,6 +53,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-shrink: 0;
 }
 
 /* ── Links ── */
@@ -60,10 +73,12 @@
   text-decoration: none;
   position: relative;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 .link ion-icon {
   font-size: 15px;
   opacity: 0.75;
+  flex-shrink: 0;
 }
 .link::after {
   content: "";
@@ -77,12 +92,17 @@
   border-radius: 2px;
   transition: width 0.25s ease;
 }
-.link:hover { color: var(--pageTitle); }
-.link:hover::after { width: calc(100% - 20px); }
+.link:hover {
+  color: var(--pageTitle);
+}
+.link:hover::after {
+  width: calc(100% - 20px);
+}
 
 /* ── Hamburger button ── */
 .menuWrapper {
   position: relative;
+  flex-shrink: 0;
 }
 .menuBtn {
   display: flex;
@@ -107,7 +127,9 @@
   height: 1.5px;
   background: var(--pageSubtitle);
   border-radius: 2px;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 .menuBtnOpen .menuBar:nth-child(1) {
   transform: translateY(6.5px) rotate(45deg);
@@ -134,7 +156,9 @@
   opacity: 0;
   transform: translateY(-6px) scale(0.97);
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 .dropdownOpen {
   opacity: 1;
@@ -192,7 +216,9 @@
   border: 1px solid var(--cardButtonBorder);
   padding: 2px;
   position: relative;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 .switchTrackDark {
   background: var(--buttonBackground);
@@ -265,18 +291,161 @@
 .langOverlayFill {
   height: 100%;
   width: 0%;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 999px;
   animation: fillBar 1.2s ease forwards;
 }
 
 @keyframes overlayFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes fillBar {
-  0%   { width: 0%; }
-  60%  { width: 75%; }
-  90%  { width: 92%; }
-  100% { width: 100%; }
+  0% {
+    width: 0%;
+  }
+  60% {
+    width: 75%;
+  }
+  90% {
+    width: 92%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE  –  largest → smallest
+   ════════════════════════════════════════ */
+
+/* ── Tablet landscape / small desktop (≤ 1024px) ── */
+@media (max-width: 1024px) {
+  .nav {
+    padding: 0 24px;
+  }
+}
+
+/* ── Tablet portrait (≤ 768px) — collapse nav links into the dropdown ── */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 20px;
+    height: 56px;
+  }
+
+  /* Hide horizontal nav links; they live in the dropdown on smaller screens */
+  .links {
+    display: none;
+  }
+
+  .logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .brandText {
+    font-size: 15px;
+  }
+
+  /* Widen dropdown so it doesn't clip near the edge */
+  .dropdown {
+    width: 200px;
+  }
+}
+
+/* ── Large phones (≤ 480px) ── */
+@media (max-width: 480px) {
+  .nav {
+    padding: 0 16px;
+    height: 52px;
+  }
+
+  .logo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .brandText {
+    font-size: 14.5px;
+  }
+
+  /* Anchor dropdown to the right edge with a small margin so it never bleeds off-screen */
+  .dropdown {
+    width: 190px;
+    right: 0;
+  }
+
+  [dir="rtl"] .dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+/* ── Small phones (≤ 375px) ── */
+@media (max-width: 375px) {
+  .nav {
+    padding: 0 12px;
+    height: 50px;
+    /* Prevent any child from causing horizontal overflow */
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .brand {
+    gap: 6px;
+    /* Clamp so a very long site name never overflows */
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .brandText {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .right {
+    gap: 12px;
+  }
+
+  .menuBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dropdown {
+    width: 180px;
+  }
+}
+
+/* ── Extra-small / very narrow phones (≤ 320px) ── */
+@media (max-width: 320px) {
+  .nav {
+    padding: 0 10px;
+  }
+
+  .brandText {
+    font-size: 13.5px;
+  }
+
+  .dropdown {
+    /* On 320 px screens the dropdown would clip right; pin it to viewport */
+    width: calc(100vw - 20px);
+    right: 0;
+  }
+
+  [dir="rtl"] .dropdown {
+    right: auto;
+    left: 0;
+  }
 }

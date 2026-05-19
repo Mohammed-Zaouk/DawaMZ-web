@@ -1,35 +1,49 @@
 .footer {
   position: relative;
   z-index: 1;
-  padding: 32px;
-  border-top: 0.5px solid var(--cardButtonBorder);
+  padding: 52px 40px 28px;
+  border-top: 1px solid var(--cardButtonBorder);
   background: var(--card);
   transition: background 0.3s ease;
 }
 
+/* ── Top ── */
 .top {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  gap: 48px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+/* ── Brand column ── */
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 280px;
+  flex-shrink: 0;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
+  text-decoration: none;
+  width: fit-content;
 }
 
 .logo {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
 }
 
 .brandText {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 650;
   color: var(--text);
+  letter-spacing: -0.4px;
 }
 
 .accent {
@@ -39,36 +53,219 @@
 .tagline {
   font-size: 13px;
   color: var(--subtext);
+  line-height: 1.65;
+  margin: 0;
 }
 
+/* ── Socials ── */
+.socials {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.socialBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  text-decoration: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.18s ease,
+    box-shadow 0.2s ease;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+}
+
+.socialBtn:hover {
+  opacity: 0.9;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Nav columns ── */
+.cols {
+  display: flex;
+  gap: 56px;
+  flex-wrap: wrap;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 130px;
+}
+
+/* ── Column title with accent underline ── */
+.colTitle {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  margin: 0 0 10px;
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.colTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--sectionHeader);
+}
+
+[dir="rtl"] .colTitle::after {
+  left: auto;
+  right: 0;
+}
+
+/* ── Column links with underline hover ── */
+.colLink {
+  font-size: 13.5px;
+  color: var(--subtext);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 5px 0;
+  position: relative;
+  width: fit-content;
+  transition: color 0.2s ease;
+}
+
+.colLink::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--sectionHeader);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+[dir="rtl"] .colLink::after {
+  left: auto;
+  right: 0;
+}
+
+.colLink:hover {
+  color: var(--sectionHeader);
+}
+
+.colLink:hover::after {
+  width: 100%;
+}
+
+/* ── Divider ── */
 .divider {
-  height: 0.5px;
+  height: 1px;
   background: var(--cardButtonBorder);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
+/* ── Bottom ── */
 .bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .copy {
   font-size: 12px;
   color: var(--subtext);
+  margin: 0;
+  opacity: 0.65;
 }
 
-.footerLinks {
+.bottomLinks {
   display: flex;
-  gap: 16px;
+  gap: 20px;
 }
 
-.footerLink {
+.bottomLink {
   font-size: 12px;
   color: var(--subtext);
-  transition: color 0.2s ease;
+  text-decoration: none;
+  opacity: 0.65;
+  transition:
+    opacity 0.2s ease,
+    color 0.2s ease;
 }
 
-.footerLink:hover {
-  color: var(--text);
+.bottomLink:hover {
+  opacity: 1;
+  color: var(--sectionHeader);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .footer {
+    padding: 40px 24px 24px;
+  }
+
+  .top {
+    flex-direction: column;
+    gap: 36px;
+    margin-bottom: 32px;
+  }
+
+  .brandCol {
+    max-width: 100%;
+  }
+
+  .cols {
+    gap: 36px;
+  }
+
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 32px 16px 20px;
+  }
+
+  .top {
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+
+  .cols {
+    gap: 28px;
+    width: 100%;
+  }
+
+  .col {
+    flex: 1;
+    min-width: 110px;
+  }
+
+  .brandText {
+    font-size: 18px;
+  }
+
+  .logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .bottomLinks {
+    gap: 14px;
+  }
 }

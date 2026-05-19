@@ -1,0 +1,404 @@
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* ── Hero ── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 52px 24px 48px;
+  gap: 28px;
+}
+
+/* ── Logo ── */
+.heroLogo {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 20px rgba(25, 118, 210, 0.2));
+}
+
+/* ── Text block ── */
+.heroTextBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  max-width: 600px;
+}
+
+.heroTitle {
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--itemTitle);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+}
+
+.heroSubtitle {
+  font-size: clamp(13px, 2vw, 15px);
+  color: var(--subtext);
+  margin: 0;
+  line-height: 1.65;
+  max-width: 500px;
+}
+
+.heroTagline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--sectionHeader);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  background: var(--selectedBg);
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--cardButtonBorder);
+}
+
+/* ── Option cards ── */
+.optionCards {
+  width: 100%;
+  max-width: 520px;
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--cardButtonBorder);
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(25, 118, 210, 0.08);
+}
+
+.optionCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  text-align: start;
+}
+
+.optionCard:hover {
+  background: var(--cardIcon);
+}
+
+.optionCardActive {
+  background: var(--selectedBg);
+}
+
+.optionLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.optionIconWrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: var(--screenBg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.optionIconWrap i {
+  font-size: 22px;
+  color: #ffffff;
+}
+
+.optionIconManual {
+  background: var(--cardIcon);
+}
+
+.optionIconManual i {
+  color: var(--sectionHeader);
+}
+
+.optionText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.optionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.optionDesc {
+  font-size: 12.5px;
+  color: var(--subtext);
+  text-align: start;
+}
+
+.autoBadge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--pillOnCallBg);
+  color: var(--pillOnCallText);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.autoDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pillOnCallText);
+}
+
+.optionArrow {
+  font-size: 18px;
+  color: var(--chevron);
+  flex-shrink: 0;
+  transition: transform 0.25s ease, color 0.2s ease;
+}
+
+.optionArrowActive {
+  color: var(--selectedBorder);
+  transform: rotate(90deg);
+}
+
+.optionDivider {
+  height: 1px;
+  background: var(--cardButtonBorder);
+  margin: 0 20px;
+}
+
+/* ── Regions section ── */
+.regionsSection {
+  padding: 0 24px 64px;
+  animation: fadeInUp 0.28s ease forwards;
+}
+
+.regionsSectionOut {
+  animation: fadeOutDown 0.28s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOutDown {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(14px); }
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.sectionLine {
+  flex: 1;
+  height: 1px;
+  background: var(--cardButtonBorder);
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--subtext);
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* ── Region card ── */
+.regionCard {
+  position: relative;
+  height: 108px;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--cardButtonBorder);
+  background: var(--card);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.regionCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--selectedBorder);
+  box-shadow: 0 8px 24px rgba(25, 118, 210, 0.1);
+}
+
+[data-theme="dark"] .regionCard:hover {
+  box-shadow: 0 8px 24px rgba(96, 165, 250, 0.12);
+}
+
+.cardBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
+}
+
+.regionCard:hover .cardBg {
+  opacity: 0.2;
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, var(--card) 20%, transparent 100%);
+  opacity: 0.92;
+}
+
+.cardAccent {
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 0;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--selectedBorder);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+[dir="rtl"] .cardAccent {
+  left: auto;
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.regionCard:hover .cardAccent {
+  opacity: 1;
+}
+
+.cardContent {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px 0 18px;
+}
+
+[dir="rtl"] .cardContent {
+  padding: 0 18px 0 16px;
+}
+
+.cardIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--cardIcon);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.regionCard:hover .cardIconWrap {
+  background: var(--selectedBg);
+}
+
+.cardIconWrap i {
+  font-size: 18px;
+  color: var(--sectionHeader);
+}
+
+.cardName {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.cardArrow {
+  font-size: 15px;
+  color: var(--chevron);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.regionCard:hover .cardArrow {
+  color: var(--selectedBorder);
+  transform: translateX(3px);
+}
+
+[dir="rtl"] .regionCard:hover .cardArrow {
+  transform: translateX(-3px);
+}
+
+/* ── Skeleton ── */
+.loadingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.skeletonCard {
+  height: 108px;
+  border-radius: 14px;
+  background: var(--cardIcon);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .grid,
+  .loadingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroLogo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hero {
+    padding: 40px 16px 36px;
+  }
+
+  .regionsSection {
+    padding: 0 16px 48px;
+  }
+
+  .optionCards {
+    max-width: 100%;
+  }
+}

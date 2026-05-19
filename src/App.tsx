@@ -6,8 +6,10 @@ import Home from "./pages/Home";
 import Cities from "./pages/Cities";
 import Pharmacies from "./pages/Pharmacies";
 import PharmacyDetail from "./pages/PharmacyDetail";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import About from "./pages/legal/About";
+import Contact from "./pages/legal/Contact";
+import Privacy from "./pages/legal/Privacy";
+import Terms from "./pages/legal/Terms";
 
 export default function App() {
   return (
@@ -19,9 +21,11 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/:regionId" element={<Cities />} />
-          <Route path="/:regionId/:cityId" element={<Pharmacies />} />
-          <Route path="/:regionId/:cityId/:pharmacyId" element={<PharmacyDetail />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/:regionSlug" element={<Cities />} />
+          <Route path="/:regionSlug/:citySlug" element={<Pharmacies />} />
+          <Route path="/:regionSlug/:citySlug/:pharmacySlug" element={<PharmacyDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
@@ -33,7 +37,7 @@ export default function App() {
 function NotFound() {
   return (
     <div style={{ padding: "60px 32px", textAlign: "center" }}>
-      <h1 style={{ color: "var(--text-primary)" }}>404 — Page not found</h1>
+      <h1 style={{ color: "var(--text)" }}>404 — Page not found</h1>
     </div>
   );
 }

@@ -1,113 +1,113 @@
 :root {
   /* backgrounds */
-  --screenBg: #1976D2;
-  --contentBg: #F0F6FF;
+  --screenBg: #1976d2;
+  --contentBg: #f0f6ff;
 
   /* cards */
-  --card: #FFFFFF;
-  --cardIcon: #E8F1FF;
-  --sectionCard: #FFFFFF;
+  --card: #ffffff;
+  --cardIcon: #e8f1ff;
+  --sectionCard: #ffffff;
 
   /* text */
-  --text: #1A3A5C;
-  --subtext: #5A7A96;
-  --sectionHeader: #1976D2;
-  --itemTitle: #0D2137;
-  --itemDescription: #8A9BB0;
-  --pageTitle: #EFF6FF;
-  --pageSubtitle: #BFDBFE;
+  --text: #1a3a5c;
+  --subtext: #5a7a96;
+  --sectionHeader: #1976d2;
+  --itemTitle: #0d2137;
+  --itemDescription: #8a9bb0;
+  --pageTitle: #eff6ff;
+  --pageSubtitle: #bfdbfe;
 
   /* misc */
   --sideLine: rgba(255, 255, 255, 0.4);
-  --chevron: #93C4E8;
-  --headerBg: #DBEAFE;
-  --selectedBorder: #1976D2;
-  --selectedBg: #EFF6FF;
-  --selectedText: #1976D2;
+  --chevron: #93c4e8;
+  --headerBg: #dbeafe;
+  --selectedBorder: #1976d2;
+  --selectedBg: #eff6ff;
+  --selectedText: #1976d2;
 
   /* buttons */
-  --buttonBackground: #1976D2;
-  --buttonTextColor: #FFFFFF;
+  --buttonBackground: #1976d2;
+  --buttonTextColor: #ffffff;
 
   /* search bar */
-  --searchBarBg: #FFFFFF;
+  --searchBarBg: #ffffff;
   --searchBarBorder: rgba(25, 118, 210, 0.18);
-  --searchBarText: #0D2137;
-  --searchBarPlaceholder: #93AFC8;
+  --searchBarText: #0d2137;
+  --searchBarPlaceholder: #93afc8;
 
   /* tab bar */
-  --tabBarBg: #FFFFFF;
-  --tabBarActive: #1976D2;
-  --tabBarInactive: #94A3B8;
+  --tabBarBg: #ffffff;
+  --tabBarActive: #1976d2;
+  --tabBarInactive: #94a3b8;
 
   /* card action buttons */
-  --cardButtonText: #1976D2;
-  --cardButtonBorder: #DBEAFE;
-  --cardButtonDivider: #DBEAFE;
+  --cardButtonText: #1976d2;
+  --cardButtonBorder: #dbeafe;
+  --cardButtonDivider: #dbeafe;
 
   /* status pills */
-  --pillNightBg: #EDE9FE;
-  --pillNightText: #4C1D95;
-  --pillOnCallBg: #DCFCE7;
-  --pillOnCallText: #14532D;
+  --pillNightBg: #ede9fe;
+  --pillNightText: #4c1d95;
+  --pillOnCallBg: #dcfce7;
+  --pillOnCallText: #14532d;
 
   /* schedule */
-  --scheduleAlwaysOpenBg: #F0FDF4;
+  --scheduleAlwaysOpenBg: #f0fdf4;
 }
 
 [data-theme="dark"] {
   /* backgrounds */
-  --screenBg: #1E3A6E;
-  --contentBg: #0F1F3D;
+  --screenBg: #1e3a6e;
+  --contentBg: #0f1f3d;
 
   /* cards */
-  --card: #172D56;
+  --card: #172d56;
   --cardIcon: #112244;
-  --sectionCard: #172D56;
+  --sectionCard: #172d56;
 
   /* text */
-  --text: #E8F1FF;
-  --subtext: #94B4D4;
-  --sectionHeader: #60A5FA;
-  --itemTitle: #F0F7FF;
-  --itemDescription: #6B8CAE;
-  --pageTitle: #F0F7FF;
-  --pageSubtitle: #93C4E8;
+  --text: #e8f1ff;
+  --subtext: #94b4d4;
+  --sectionHeader: #60a5fa;
+  --itemTitle: #f0f7ff;
+  --itemDescription: #6b8cae;
+  --pageTitle: #f0f7ff;
+  --pageSubtitle: #93c4e8;
 
   /* misc */
   --sideLine: rgba(255, 255, 255, 0.12);
-  --chevron: #4A7AAA;
+  --chevron: #4a7aaa;
   --headerBg: #112244;
-  --selectedBorder: #60A5FA;
-  --selectedBg: #162B50;
-  --selectedText: #60A5FA;
+  --selectedBorder: #60a5fa;
+  --selectedBg: #162b50;
+  --selectedText: #60a5fa;
 
   /* buttons */
-  --buttonBackground: #2563EB;
-  --buttonTextColor: #FFFFFF;
+  --buttonBackground: #2563eb;
+  --buttonTextColor: #ffffff;
 
   /* search bar */
-  --searchBarBg: #172D56;
+  --searchBarBg: #172d56;
   --searchBarBorder: rgba(96, 165, 250, 0.2);
-  --searchBarText: #C0D4EC;
-  --searchBarPlaceholder: #4A6A8A;
+  --searchBarText: #c0d4ec;
+  --searchBarPlaceholder: #4a6a8a;
 
   /* tab bar */
-  --tabBarBg: #1E3A6E;
-  --tabBarActive: #60A5FA;
-  --tabBarInactive: #3A5070;
+  --tabBarBg: #1e3a6e;
+  --tabBarActive: #60a5fa;
+  --tabBarInactive: #3a5070;
 
   /* card action buttons */
-  --cardButtonText: #93C4E8;
+  --cardButtonText: #93c4e8;
   --cardButtonBorder: rgba(96, 165, 250, 0.15);
   --cardButtonDivider: rgba(96, 165, 250, 0.15);
 
   /* status pills */
-  --pillNightBg: #1E1B4B;
-  --pillNightText: #A5B4FC;
-  --pillOnCallBg: #052E16;
-  --pillOnCallText: #4ADE80;
+  --pillNightBg: #1e1b4b;
+  --pillNightText: #a5b4fc;
+  --pillOnCallBg: #052e16;
+  --pillOnCallText: #4ade80;
 
   /* schedule */
-  --scheduleAlwaysOpenBg: #052E16;
+  --scheduleAlwaysOpenBg: #052e16;
 }
