@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../context/language/useLanguage";
 import { supabase } from "../services/supabase";
+import { isOpenNow } from "../utils/isOpen";
+import type { Schedule } from "../utils/isOpen";
 import styles from "../styles/pages-style/Cities.module.css";
 
 type Region = {
@@ -22,6 +24,21 @@ type City = {
   slug: string;
 };
 
+type PharmacyRow = {
+  city_id: string;
+  open: boolean;
+  is_on_call: boolean;
+  is_night_pharmacy: boolean;
+  duty_start: string | null;
+  duty_end: string | null;
+  schedule: Schedule | null;
+};
+
+type CityStats = {
+  total: number;
+  openCount: number;
+};
+
 const translations = {
   ar: {
     selectCity: "اختر مدينتك",
@@ -30,6 +47,8 @@ const translations = {
     loading: "جاري التحميل...",
     notFound: "المنطقة غير موجودة",
     noCities: "لا توجد مدن في هذه المنطقة",
+    open: "مفتوحة",
+    pharmacies: "صيدلية",
   },
   fr: {
     selectCity: "Choisissez votre ville",
@@ -38,6 +57,8 @@ const translations = {
     loading: "Chargement...",
     notFound: "Région introuvable",
     noCities: "Aucune ville dans cette région",
+    open: "ouvertes",
+    pharmacies: "pharmacies",
   },
   en: {
     selectCity: "Select your city",
@@ -46,6 +67,8 @@ const translations = {
     loading: "Loading...",
     notFound: "Region not found",
     noCities: "No cities in this region",
+    open: "open",
+    pharmacies: "pharmacies",
   },
 };
 
@@ -56,6 +79,7 @@ export default function Cities() {
 
   const [region, setRegion] = useState<Region | null>(null);
   const [cities, setCities] = useState<City[]>([]);
+  const [statsMap, setStatsMap] = useState<Record<string, CityStats>>({});
   const [loading, setLoading] = useState(true);
 
   const text = translations[language] ?? translations.en;
@@ -64,7 +88,6 @@ export default function Cities() {
     const fetch = async () => {
       setLoading(true);
 
-      // fetch region by slug
       const { data: regionData } = await supabase
         .from("regions")
         .select("*")
@@ -78,14 +101,42 @@ export default function Cities() {
 
       setRegion(regionData);
 
-      // fetch cities for this region
       const { data: citiesData } = await supabase
         .from("cities")
         .select("*")
         .eq("region_id", regionData.id)
         .order("name", { ascending: true });
 
-      setCities(citiesData ?? []);
+      const cityList = citiesData ?? [];
+      setCities(cityList);
+
+      if (cityList.length > 0) {
+        const cityIds = cityList.map((c) => c.id);
+        const { data: pharmacies } = await supabase
+          .from("pharmacies")
+          .select(
+            "city_id, open, is_on_call, is_night_pharmacy, duty_start, duty_end, schedule",
+          )
+          .in("city_id", cityIds);
+
+        const map: Record<string, CityStats> = {};
+        for (const p of pharmacies ?? ([] as PharmacyRow[])) {
+          if (!map[p.city_id]) map[p.city_id] = { total: 0, openCount: 0 };
+          map[p.city_id].total += 1;
+          const open =
+            p.open !== false &&
+            isOpenNow(
+              p.schedule,
+              p.is_on_call ?? false,
+              p.duty_start ?? "",
+              p.duty_end ?? "",
+              p.is_night_pharmacy ?? false,
+            );
+          if (open) map[p.city_id].openCount += 1;
+        }
+        setStatsMap(map);
+      }
+
       setLoading(false);
     };
 
@@ -126,7 +177,6 @@ export default function Cities() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
-
       {/* Region hero banner */}
       <div className={styles.regionBanner}>
         <div
@@ -135,20 +185,13 @@ export default function Cities() {
         />
         <div className={styles.bannerOverlay} />
         <div className={styles.bannerContent}>
-          <button
-            className={styles.backBtn}
-            onClick={() => navigate(-1)}
-          >
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
             <i className={`ion-ios-arrow-${isRTL ? "forward" : "back"}`} />
             <span>{text.back}</span>
           </button>
           <div className={styles.bannerText}>
-            <p className={styles.bannerLabel}>
-              {text.citiesIn}
-            </p>
-            <h1 className={styles.bannerTitle}>
-              {getRegionName(region)}
-            </h1>
+            <p className={styles.bannerLabel}>{text.citiesIn}</p>
+            <h1 className={styles.bannerTitle}>{getRegionName(region)}</h1>
           </div>
         </div>
       </div>
@@ -168,32 +211,61 @@ export default function Cities() {
           </div>
         ) : (
           <div className={styles.grid}>
-            {cities.map((city) => (
-              <div
-                key={city.id}
-                className={styles.cityCard}
-                onClick={() => navigate(`/${regionSlug}/${city.slug}`)}
-              >
-                {/* City image bg */}
-                {city.image && (
-                  <div
-                    className={styles.cardBg}
-                    style={{ backgroundImage: `url(${city.image})` }}
-                  />
-                )}
-                <div className={styles.cardOverlay} />
-                <div className={styles.cardAccent} />
-                <div className={styles.cardContent}>
-                  <span className={styles.cardIconWrap}>
-                    <i className="ion-ios-pin" />
-                  </span>
-                  <span className={styles.cardName}>
-                    {getCityName(city)}
-                  </span>
-                  <i className={`ion-ios-arrow-${isRTL ? "back" : "forward"} ${styles.cardArrow}`} />
+            {cities.map((city) => {
+              const stats = statsMap[city.id] ?? { total: 0, openCount: 0 };
+              return (
+                <div
+                  key={city.id}
+                  className={styles.cityCard}
+                  onClick={() => navigate(`/${regionSlug}/${city.slug}`)}
+                >
+                  {city.image && (
+                    <div
+                      className={styles.cardBg}
+                      style={{ backgroundImage: `url(${city.image})` }}
+                    />
+                  )}
+                  <div className={styles.cardOverlay} />
+                  <div className={styles.cardAccent} />
+                  <div className={styles.cardContent}>
+                    <span className={styles.cardIconWrap}>
+                      <i className="ion-ios-pin" />
+                    </span>
+                    <span className={styles.cardName}>{getCityName(city)}</span>
+
+                    {/* Stats */}
+                    {stats && (
+                      <div className={styles.cardStats}>
+                        <span className={styles.statTotal}>
+                          <i className="ion-ios-medkit" />
+                          {stats.total}
+                        </span>
+                        <span className={styles.statDivider}>·</span>
+                        <span
+                          className={styles.statOpen}
+                          style={{
+                            color: stats.openCount > 0 ? "#22c55e" : "#ef4444",
+                          }}
+                        >
+                          <span
+                            className={styles.statDot}
+                            style={{
+                              background:
+                                stats.openCount > 0 ? "#22c55e" : "#ef4444",
+                            }}
+                          />
+                          {stats.openCount} {text.open}
+                        </span>
+                      </div>
+                    )}
+
+                    <i
+                      className={`ion-ios-arrow-${isRTL ? "back" : "forward"} ${styles.cardArrow}`}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>

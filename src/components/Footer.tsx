@@ -78,10 +78,10 @@ export default function Footer() {
       <div className={styles.top}>
         {/* Brand */}
         <div className={styles.brandCol}>
-          <Link to="/" className={styles.brand}>
+          <Link to="/" className={styles.brand} dir="ltr">
             <img src={logo} alt="DawaMZ" className={styles.logo} />
             <span className={styles.brandText}>
-              Dawa<span className={styles.accent}>mz</span>
+              Dawa<span className={styles.accent}>MZ</span>
             </span>
           </Link>
           <p className={styles.tagline}>{text.tagline}</p>

@@ -563,6 +563,13 @@ export default function PharmacyDetail() {
               {DAY_KEYS.map((day, i) => {
                 const slots = pharmacy.schedule![day];
                 const isToday = day === todayKey;
+                const isOnDuty =
+                  isToday &&
+                  (pharmacy.is_on_call || pharmacy.is_night_pharmacy) &&
+                  pharmacy.duty_start &&
+                  pharmacy.duty_end &&
+                  pharmacy.duty_start !== "24h";
+
                 return (
                   <div key={day}>
                     <div
@@ -582,7 +589,11 @@ export default function PharmacyDetail() {
                         </span>
                       </div>
                       <div className={styles.scheduleSlots}>
-                        {!slots || slots.length === 0 ? (
+                        {isOnDuty ? (
+                          <span className={styles.alwaysOpenLabel}>
+                            <i className="ion-ios-moon" /> {text.alwaysOpen}
+                          </span>
+                        ) : !slots || slots.length === 0 ? (
                           <span className={styles.closedLabel}>
                             {text.closed}
                           </span>

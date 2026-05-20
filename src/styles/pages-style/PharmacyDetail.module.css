@@ -516,6 +516,8 @@
 .dayLabel {
   font-size: 13.5px;
   color: var(--subtext);
+  display: flex;
+  gap: 5px;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -528,7 +530,6 @@
 .todayTag {
   display: inline-flex;
   align-items: center;
-  margin-left: 6px;
   background: var(--buttonBackground);
   color: var(--buttonTextColor);
   font-size: 9px;

@@ -49,10 +49,10 @@ export default function Navbar() {
 
       <nav className={styles.nav} dir={isRTL ? "rtl" : "ltr"}>
         {/* Logo */}
-        <Link to="/" className={styles.brand}>
+        <Link to="/" className={styles.brand} dir="ltr">
           <img src={logo} alt="Dawamz logo" className={styles.logo} />
           <span className={styles.brandText}>
-            Dawa<span className={styles.accent}>mz</span>
+            Dawa<span className={styles.accent}>MZ</span>
           </span>
         </Link>
 
