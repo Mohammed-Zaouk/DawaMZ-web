@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/language/useLanguage";
 import { supabase } from "../services/supabase";
 import { isOpenNow } from "../utils/isOpen";
@@ -49,6 +50,9 @@ const translations = {
     noCities: "لا توجد مدن في هذه المنطقة",
     open: "مفتوحة",
     pharmacies: "صيدلية",
+    metaTitle: (region: string) => `مدن منطقة ${region} | DawaMZ`,
+    metaDesc: (region: string) =>
+      `اعثر على أقرب صيدلية مفتوحة في مدن منطقة ${region}`,
   },
   fr: {
     selectCity: "Choisissez votre ville",
@@ -59,6 +63,9 @@ const translations = {
     noCities: "Aucune ville dans cette région",
     open: "ouvertes",
     pharmacies: "pharmacies",
+    metaTitle: (region: string) => `Villes de la région ${region} | DawaMZ`,
+    metaDesc: (region: string) =>
+      `Trouvez la pharmacie ouverte la plus proche dans la région ${region}`,
   },
   en: {
     selectCity: "Select your city",
@@ -69,6 +76,8 @@ const translations = {
     noCities: "No cities in this region",
     open: "open",
     pharmacies: "pharmacies",
+    metaTitle: (region: string) => `Cities in ${region} | DawaMZ`,
+    metaDesc: (region: string) => `Find the nearest open pharmacy in ${region}`,
   },
 };
 
@@ -177,6 +186,22 @@ export default function Cities() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
+      <Helmet>
+        <title>{text.metaTitle(getRegionName(region))}</title>
+        <meta
+          name="description"
+          content={text.metaDesc(getRegionName(region))}
+        />
+        <meta
+          property="og:title"
+          content={text.metaTitle(getRegionName(region))}
+        />
+        <meta
+          property="og:description"
+          content={text.metaDesc(getRegionName(region))}
+        />
+        {region.image && <meta property="og:image" content={region.image} />}
+      </Helmet>
       {/* Region hero banner */}
       <div className={styles.regionBanner}>
         <div

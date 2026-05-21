@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { Helmet } from "react-helmet-async";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLanguage } from "../context/language/useLanguage";
@@ -95,7 +96,11 @@ const translations = {
     },
     closed: "مغلق",
     today: "اليوم",
+    metaTitle: (name: string) => `${name} | DawaMZ`,
+    metaDesc: (name: string, address: string) =>
+      `${name} — ${address}. اعثر على ساعات العمل والموقع ورقم الهاتف`,
   },
+
   fr: {
     back: "Retour",
     openNow: "Ouvert maintenant",
@@ -129,6 +134,9 @@ const translations = {
     },
     closed: "Fermé",
     today: "Aujourd'hui",
+    metaTitle: (name: string) => `${name} | DawaMZ`,
+    metaDesc: (name: string, address: string) =>
+      `${name} — ${address}. Horaires, localisation et contact`,
   },
   en: {
     back: "Back",
@@ -163,6 +171,9 @@ const translations = {
     },
     closed: "Closed",
     today: "Today",
+    metaTitle: (name: string) => `${name} | DawaMZ`,
+    metaDesc: (name: string, address: string) =>
+      `${name} — ${address}. Find opening hours, location and phone number`,
   },
 };
 
@@ -338,6 +349,19 @@ export default function PharmacyDetail() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
+      <Helmet>
+        <title>{text.metaTitle(getName())}</title>
+        <meta
+          name="description"
+          content={text.metaDesc(getName(), getAddress() || "")}
+        />
+        <meta property="og:title" content={text.metaTitle(getName())} />
+        <meta
+          property="og:description"
+          content={text.metaDesc(getName(), getAddress() || "")}
+        />
+        {cityImage && <meta property="og:image" content={cityImage} />}
+      </Helmet>
       {/* ── Banner ── */}
       <div className={styles.banner}>
         {cityImage && (

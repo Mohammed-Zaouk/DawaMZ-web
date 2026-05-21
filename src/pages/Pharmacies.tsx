@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/language/useLanguage";
 import { supabase } from "../services/supabase";
 import { isOpenNow, getScheduleStatus } from "../utils/isOpen";
@@ -74,6 +75,9 @@ const translations = {
     notFoundSearch: "لم نجد صيدلية بهذا الاسم",
     notFoundSearchSub: "هل أنت متأكد من الاسم؟ يمكنك اقتراحها لإضافتها.",
     suggestBtn: "اقتراح صيدلية",
+    metaTitle: (city: string) => `صيدليات مدينة ${city} | DawaMZ`,
+    metaDesc: (city: string) =>
+      `اعثر على أقرب صيدلية مفتوحة الآن في مدينة ${city}`,
   },
   fr: {
     back: "Retour",
@@ -114,6 +118,9 @@ const translations = {
     notFoundSearch: "Aucune pharmacie trouvée",
     notFoundSearchSub: "Vous êtes sûr du nom ? Suggérez-la pour l'ajouter.",
     suggestBtn: "Suggérer une pharmacie",
+    metaTitle: (city: string) => `Pharmacies de ${city} | DawaMZ`,
+    metaDesc: (city: string) =>
+      `Trouvez la pharmacie ouverte la plus proche à ${city}`,
   },
   en: {
     back: "Back",
@@ -152,6 +159,9 @@ const translations = {
     notFoundSearch: "No pharmacy found",
     notFoundSearchSub: "Sure of the name? You can suggest adding it.",
     suggestBtn: "Suggest a pharmacy",
+    metaTitle: (city: string) => `Pharmacies in ${city} | DawaMZ`,
+    metaDesc: (city: string) =>
+      `Find the nearest open pharmacy in ${city} right now`,
   },
 };
 
@@ -427,6 +437,24 @@ export default function Pharmacies() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
+      <Helmet>
+        <title>
+          {text.metaTitle(language === "ar" ? city.name_ar : city.name)}
+        </title>
+        <meta
+          name="description"
+          content={text.metaDesc(language === "ar" ? city.name_ar : city.name)}
+        />
+        <meta
+          property="og:title"
+          content={text.metaTitle(language === "ar" ? city.name_ar : city.name)}
+        />
+        <meta
+          property="og:description"
+          content={text.metaDesc(language === "ar" ? city.name_ar : city.name)}
+        />
+        {city.image && <meta property="og:image" content={city.image} />}
+      </Helmet>
       {/* Banner */}
       <div className={styles.banner}>
         {city.image && (

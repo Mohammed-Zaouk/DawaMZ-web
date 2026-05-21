@@ -1,4 +1,5 @@
-import styles from "../../styles/legal-styles/About.module.css"
+import styles from "../../styles/legal-styles/About.module.css";
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../../context/language/useLanguage";
 import logo from "../../assets/logo.png";
 
@@ -27,9 +28,11 @@ const translations = {
     freeContent:
       "الموقع مجاني تماماً بدون إعلانات أو أي تكاليف. نؤمن بأن الوصول إلى معلومات الصيدليات يجب أن يكون متاحاً للجميع.",
     dataTitle: "خصوصيتك مهمة",
-    dataContent:
-      "نحن نحترم خصوصيتك. لا نحفظ أو نشارك معلوماتك الشخصية.",
+    dataContent: "نحن نحترم خصوصيتك. لا نحفظ أو نشارك معلوماتك الشخصية.",
     copyright: `© ${currentYear} DawaMZ. جميع الحقوق محفوظة.`,
+    metaTitle: "من نحن | DawaMZ",
+    metaDesc:
+      "DawaMZ — منصة مجانية للعثور على الصيدليات المفتوحة في المغرب. بدون إعلانات، بثلاث لغات.",
   },
   fr: {
     appName: "DawaMZ",
@@ -56,6 +59,9 @@ const translations = {
     dataContent:
       "Nous respectons votre vie privée. Nous ne sauvegardons ni ne partageons vos informations personnelles.",
     copyright: `© ${currentYear} DawaMZ. Tous droits réservés.`,
+    metaTitle: "À propos | DawaMZ",
+    metaDesc:
+      "DawaMZ — plateforme gratuite pour trouver les pharmacies ouvertes au Maroc. Sans publicités, en trois langues.",
   },
   en: {
     appName: "DawaMZ",
@@ -82,6 +88,9 @@ const translations = {
     dataContent:
       "We respect your privacy. We do not save or share your personal information.",
     copyright: `© ${currentYear} DawaMZ. All rights reserved.`,
+    metaTitle: "About | DawaMZ",
+    metaDesc:
+      "DawaMZ — free platform to find open pharmacies across Morocco. No ads, available in three languages.",
   },
 };
 
@@ -124,6 +133,12 @@ export default function About() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
+      <Helmet>
+        <title>{text.metaTitle}</title>
+        <meta name="description" content={text.metaDesc} />
+        <meta property="og:title" content={text.metaTitle} />
+        <meta property="og:description" content={text.metaDesc} />
+      </Helmet>
 
       {/* Logo hero */}
       <section className={styles.hero}>
@@ -148,7 +163,10 @@ export default function About() {
       {/* Features */}
       <section className={styles.section}>
         <div className={styles.sectionTitleRow}>
-          <div className={styles.sectionIcon} style={{ background: "rgba(251,188,5,0.1)" }}>
+          <div
+            className={styles.sectionIcon}
+            style={{ background: "rgba(251,188,5,0.1)" }}
+          >
             <i className="ion-md-star" style={{ color: "#FBC005" }} />
           </div>
           <h2 className={styles.sectionTitle}>{text.featuresTitle}</h2>
@@ -156,7 +174,10 @@ export default function About() {
         <div className={styles.featuresCard}>
           {text.features.map((f, i) => (
             <div key={i} className={styles.featureRow}>
-              <i className="ion-md-checkmark-circle" style={{ color: "#1A73E8" }} />
+              <i
+                className="ion-md-checkmark-circle"
+                style={{ color: "#1A73E8" }}
+              />
               <span className={styles.featureText}>{f}</span>
             </div>
           ))}
@@ -165,7 +186,6 @@ export default function About() {
 
       {/* Copyright */}
       <p className={styles.copyright}>{text.copyright}</p>
-
     </div>
   );
 }

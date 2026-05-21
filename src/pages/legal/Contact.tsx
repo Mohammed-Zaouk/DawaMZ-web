@@ -1,4 +1,5 @@
 import styles from "../../styles/legal-styles/Contact.module.css";
+import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../../context/language/useLanguage";
 
 const translations = {
@@ -17,6 +18,9 @@ const translations = {
     facebook: "فيسبوك",
     facebookDesc: "DawaMZ",
     responseTime: "نرد عادةً خلال 24 ساعة",
+    metaTitle: "تواصل معنا | DawaMZ",
+    metaDesc:
+      "تواصل مع فريق DawaMZ عبر البريد الإلكتروني أو واتساب أو وسائل التواصل الاجتماعي",
   },
   fr: {
     pageTitle: "Contactez-nous",
@@ -33,6 +37,9 @@ const translations = {
     facebook: "Facebook",
     facebookDesc: "DawaMZ",
     responseTime: "Nous répondons généralement sous 24 heures",
+    metaTitle: "Contactez-nous | DawaMZ",
+    metaDesc:
+      "Contactez l'équipe DawaMZ par e-mail, WhatsApp ou réseaux sociaux",
   },
   en: {
     pageTitle: "Contact Us",
@@ -49,6 +56,8 @@ const translations = {
     facebook: "Facebook",
     facebookDesc: "DawaMZ",
     responseTime: "We usually respond within 24 hours",
+    metaTitle: "Contact Us | DawaMZ",
+    metaDesc: "Reach the DawaMZ team via email, WhatsApp, or social media",
   },
 };
 
@@ -98,6 +107,10 @@ export default function Contact() {
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
+      <Helmet>
+        <title>{text.metaTitle}</title>
+        <meta name="description" content={text.metaDesc} />
+      </Helmet>
       {/* Header */}
       <section className={styles.hero}>
         <div className={styles.heroIcon}>
