@@ -48,6 +48,12 @@ const translations = {
     night: "ليلية",
     onCall: "مناوبة",
     noPharmacies: "لا توجد صيدليات مفتوحة",
+    noPharmaciesSub: "لا توجد صيدليات مفتوحة حالياً في هذه المدينة",
+    noNightPharmacies: "لا توجد صيدليات ليلية مفتوحة",
+    noNightPharmaciesSub: "لا توجد صيدليات ليلية مفتوحة حالياً في هذه المدينة",
+    noOnCallPharmacies: "لا توجد صيدليات مناوبة مفتوحة",
+    noOnCallPharmaciesSub:
+      "لا توجد صيدليات مناوبة مفتوحة حالياً في هذه المدينة",
     notFound: "المدينة غير موجودة",
     filterAll: "الكل",
     filterNight: "ليلية",
@@ -65,6 +71,9 @@ const translations = {
     next: "التالي",
     showing: (from: number, to: number, total: number) =>
       `عرض ${from}–${to} من ${total} صيدلية`,
+    notFoundSearch: "لم نجد صيدلية بهذا الاسم",
+    notFoundSearchSub: "هل أنت متأكد من الاسم؟ يمكنك اقتراحها لإضافتها.",
+    suggestBtn: "اقتراح صيدلية",
   },
   fr: {
     back: "Retour",
@@ -77,6 +86,14 @@ const translations = {
     night: "Nuit",
     onCall: "Garde",
     noPharmacies: "Aucune pharmacie ouverte",
+    noPharmaciesSub:
+      "Aucune pharmacie n'est ouverte en ce moment dans cette ville",
+    noNightPharmacies: "Aucune pharmacie de nuit ouverte",
+    noNightPharmaciesSub:
+      "Aucune pharmacie de nuit n'est ouverte en ce moment dans cette ville",
+    noOnCallPharmacies: "Aucune pharmacie de garde ouverte",
+    noOnCallPharmaciesSub:
+      "Aucune pharmacie de garde n'est ouverte en ce moment dans cette ville",
     notFound: "Ville introuvable",
     filterAll: "Toutes",
     filterNight: "Nuit",
@@ -94,6 +111,9 @@ const translations = {
     next: "Suivant",
     showing: (from: number, to: number, total: number) =>
       `Affichage de ${from}–${to} sur ${total} pharmacies`,
+    notFoundSearch: "Aucune pharmacie trouvée",
+    notFoundSearchSub: "Vous êtes sûr du nom ? Suggérez-la pour l'ajouter.",
+    suggestBtn: "Suggérer une pharmacie",
   },
   en: {
     back: "Back",
@@ -106,6 +126,12 @@ const translations = {
     night: "Night",
     onCall: "On Call",
     noPharmacies: "No open pharmacies",
+    noPharmaciesSub: "No pharmacies are currently open in this city",
+    noNightPharmacies: "No open night pharmacies",
+    noNightPharmaciesSub: "No night pharmacies are currently open in this city",
+    noOnCallPharmacies: "No open on-call pharmacies",
+    noOnCallPharmaciesSub:
+      "No on-call pharmacies are currently open in this city",
     notFound: "City not found",
     filterAll: "All",
     filterNight: "Night",
@@ -123,6 +149,9 @@ const translations = {
     next: "Next",
     showing: (from: number, to: number, total: number) =>
       `Showing ${from}–${to} of ${total} pharmacies`,
+    notFoundSearch: "No pharmacy found",
+    notFoundSearchSub: "Sure of the name? You can suggest adding it.",
+    suggestBtn: "Suggest a pharmacy",
   },
 };
 
@@ -292,6 +321,40 @@ export default function Pharmacies() {
         getAddress(p).toLowerCase().includes(search.toLowerCase()),
     );
 
+  // Resolve empty state content based on search + filter
+  const getEmptyState = () => {
+    if (search.length > 0) {
+      return {
+        icon: "ion-ios-search",
+        title: text.notFoundSearch,
+        sub: text.notFoundSearchSub,
+        showSuggest: true,
+      };
+    }
+    if (filter === "night") {
+      return {
+        icon: "ion-ios-moon",
+        title: text.noNightPharmacies,
+        sub: text.noNightPharmaciesSub,
+        showSuggest: false,
+      };
+    }
+    if (filter === "oncall") {
+      return {
+        icon: "ion-ios-pulse",
+        title: text.noOnCallPharmacies,
+        sub: text.noOnCallPharmaciesSub,
+        showSuggest: false,
+      };
+    }
+    return {
+      icon: "ion-ios-medkit",
+      title: text.noPharmacies,
+      sub: text.noPharmaciesSub,
+      showSuggest: false,
+    };
+  };
+
   // Pagination
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginatedItems = filtered.slice(
@@ -359,6 +422,8 @@ export default function Pharmacies() {
       </div>
     );
   }
+
+  const emptyState = getEmptyState();
 
   return (
     <div className={styles.page} dir={isRTL ? "rtl" : "ltr"}>
@@ -438,8 +503,20 @@ export default function Pharmacies() {
       <section className={styles.listSection}>
         {filtered.length === 0 ? (
           <div className={styles.empty}>
-            <i className="ion-ios-medkit" />
-            <p>{text.noPharmacies}</p>
+            <div className={styles.emptyIconWrap}>
+              <i className={emptyState.icon} />
+            </div>
+            <p className={styles.emptyTitle}>{emptyState.title}</p>
+            <p className={styles.emptySub}>{emptyState.sub}</p>
+            {emptyState.showSuggest && (
+              <a
+                href="mailto:contact@dawamz.com?subject=Suggestion pharmacie"
+                className={styles.emptySuggest}
+              >
+                <i className="ion-ios-add-circle-outline" />
+                <span>{text.suggestBtn}</span>
+              </a>
+            )}
           </div>
         ) : (
           <>

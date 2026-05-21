@@ -299,6 +299,9 @@
   text-align: end;
   min-width: 0;
   flex-shrink: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .pillNight {
@@ -483,6 +486,53 @@
 }
 .empty p {
   font-size: 15px;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 8px 0 4px;
+  text-align: center;
+}
+
+.emptySub {
+  font-size: 13px;
+  color: var(--subtext);
+  text-align: center;
+  margin: 0 0 12px;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.emptySuggest {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--suggestColor);
+  background: transparent;
+  border: 1px solid var(--buttonBackground);
+  text-decoration: none;
+  opacity: 0.75;
+  transition:
+    opacity 0.18s ease,
+    background 0.18s ease;
+  margin-top: 4px;
+}
+
+.emptySuggest i {
+  font-size: 16px;
+  opacity: 0.9;
+  color: var(--suggestColor);
+}
+
+.emptySuggest:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--buttonBackground) 10%, transparent);
 }
 
 /* ── Pagination ── */

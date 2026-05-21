@@ -16,6 +16,7 @@
   --itemDescription: #8a9bb0;
   --pageTitle: #eff6ff;
   --pageSubtitle: #bfdbfe;
+  --suggestColor: #1976d2;
 
   /* misc */
   --sideLine: rgba(255, 255, 255, 0.4);
@@ -73,6 +74,7 @@
   --itemDescription: #6b8cae;
   --pageTitle: #f0f7ff;
   --pageSubtitle: #93c4e8;
+  --suggestColor: #ffffff;
 
   /* misc */
   --sideLine: rgba(255, 255, 255, 0.12);
