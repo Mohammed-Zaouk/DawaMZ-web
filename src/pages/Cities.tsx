@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/language/useLanguage";
-import { supabase } from "../services/supabase";
+import { supabaseClient } from "../services/supabase";
 import { isOpenNow } from "../utils/isOpen";
 import type { Schedule } from "../utils/isOpen";
 import styles from "../styles/pages-style/Cities.module.css";
@@ -97,7 +97,7 @@ export default function Cities() {
     const fetch = async () => {
       setLoading(true);
 
-      const { data: regionData } = await supabase
+      const { data: regionData } = await supabaseClient
         .from("regions")
         .select("*")
         .eq("slug", regionSlug)
@@ -110,7 +110,7 @@ export default function Cities() {
 
       setRegion(regionData);
 
-      const { data: citiesData } = await supabase
+      const { data: citiesData } = await supabaseClient
         .from("cities")
         .select("*")
         .eq("region_id", regionData.id)
@@ -121,7 +121,7 @@ export default function Cities() {
 
       if (cityList.length > 0) {
         const cityIds = cityList.map((c) => c.id);
-        const { data: pharmacies } = await supabase
+        const { data: pharmacies } = await supabaseClient
           .from("pharmacies")
           .select(
             "city_id, open, is_on_call, is_night_pharmacy, duty_start, duty_end, schedule",

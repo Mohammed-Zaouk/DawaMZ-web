@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/language/useLanguage";
-import { supabase } from "../services/supabase";
+import { supabaseClient } from "../services/supabase";
 import { isOpenNow } from "../utils/isOpen";
 import { getUserLocation } from "../utils/location/getLocation";
 import { calculateDistance } from "../utils/location/calculateDistance";
@@ -123,7 +123,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchRegions = async () => {
-      const { data, error } = await supabase.from("regions").select("*");
+      const { data, error } = await supabaseClient.from("regions").select("*");
       if (!error && data) setRegions(data);
       setLoading(false);
     };
@@ -171,7 +171,7 @@ export default function Home() {
       return;
     }
 
-    const { data: allPharmacies } = await supabase
+    const { data: allPharmacies } = await supabaseClient
       .from("pharmacies")
       .select(
         "id, slug, name, name_ar, latitude, longitude, is_on_call, is_night_pharmacy, duty_start, duty_end, schedule, city_id",
@@ -210,7 +210,7 @@ export default function Home() {
 
     const nearest = openWithDistance[0] as PharmacyWithDist;
 
-    const { data: cityData } = await supabase
+    const { data: cityData } = await supabaseClient
       .from("cities")
       .select("id, slug, region_id")
       .eq("id", nearest.city_id)
@@ -221,7 +221,7 @@ export default function Home() {
       return;
     }
 
-    const { data: regionData } = await supabase
+    const { data: regionData } = await supabaseClient
       .from("regions")
       .select("slug")
       .eq("id", cityData.region_id)

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/language/useLanguage";
-import { supabase } from "../services/supabase";
+import { supabaseClient } from "../services/supabase";
 import { isOpenNow, getScheduleStatus } from "../utils/isOpen";
 import type { Schedule, ScheduleStatus } from "../utils/isOpen";
 import styles from "../styles/pages-style/Pharmacies.module.css";
@@ -192,7 +192,7 @@ export default function Pharmacies() {
     const fetchData = async () => {
       setLoading(true);
 
-      const { data: cityData } = await supabase
+      const { data: cityData } = await supabaseClient
         .from("cities")
         .select("*")
         .eq("slug", citySlug)
@@ -204,7 +204,7 @@ export default function Pharmacies() {
       }
       setCity(cityData);
 
-      const { data: pharmaData } = await supabase
+      const { data: pharmaData } = await supabaseClient
         .from("pharmacies")
         .select("*")
         .eq("city_id", cityData.id);

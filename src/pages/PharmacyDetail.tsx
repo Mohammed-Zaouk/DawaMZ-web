@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet-async";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useLanguage } from "../context/language/useLanguage";
-import { supabase } from "../services/supabase";
+import { supabaseClient } from "../services/supabase";
 import { getScheduleStatus } from "../utils/isOpen";
 import type { Schedule, ScheduleStatus } from "../utils/isOpen";
 import styles from "../styles/pages-style/PharmacyDetail.module.css";
@@ -236,7 +236,7 @@ export default function PharmacyDetail() {
       setLoading(true);
 
       // Primary: fetch by slug
-      let { data } = await supabase
+      let { data } = await supabaseClient
         .from("pharmacies")
         .select("*")
         .eq("slug", pharmacySlug)
@@ -244,7 +244,7 @@ export default function PharmacyDetail() {
 
       // Fallback: fetch by id (handles cases where navigation passed an id)
       if (!data) {
-        const fallback = await supabase
+        const fallback = await supabaseClient
           .from("pharmacies")
           .select("*")
           .eq("id", pharmacySlug)
