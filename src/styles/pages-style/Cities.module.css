@@ -1,15 +1,16 @@
+/* Page */
 .page {
   position: relative;
   z-index: 1;
   min-height: 100vh;
 }
 
-/* ── Loading ── */
+/* Loading */
 .loadingPage {
   padding: 32px 24px;
 }
 
-/* ── Not found ── */
+/* Not found */
 .notFound {
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@
   font-size: 16px;
 }
 
-/* ── Region banner ── */
+/* Banner */
 .regionBanner {
   position: relative;
   height: 220px;
@@ -66,7 +67,7 @@
   padding: 20px 24px 24px;
 }
 
-/* ── Back button ── */
+/* Back button */
 .backBtn {
   display: flex;
   align-items: center;
@@ -87,11 +88,12 @@
 .backBtn:hover {
   background: rgba(255, 255, 255, 0.25);
 }
+
 .backBtn i {
   font-size: 16px;
 }
 
-/* ── Banner text ── */
+/* Banner text */
 .bannerText {
   display: flex;
   flex-direction: column;
@@ -115,7 +117,7 @@
   line-height: 1.2;
 }
 
-/* ── Cities section ── */
+/* Cities section */
 .citiesSection {
   padding: 8px 24px 64px;
 }
@@ -142,6 +144,7 @@
   white-space: nowrap;
 }
 
+/* Card stats */
 .cardStats {
   display: flex;
   align-items: center;
@@ -187,14 +190,14 @@
   flex-shrink: 0;
 }
 
-/* ── Grid ── */
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
 }
 
-/* ── City card ── */
+/* City card */
 .cityCard {
   position: relative;
   height: 100px;
@@ -327,7 +330,7 @@
   transform: translateX(-3px);
 }
 
-/* ── Empty state ── */
+/* Empty state */
 .empty {
   display: flex;
   flex-direction: column;
@@ -347,7 +350,7 @@
   font-size: 15px;
 }
 
-/* ── Skeleton ── */
+/* Skeleton */
 .loadingGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -371,7 +374,7 @@
   }
 }
 
-/* ── Responsive ── */
+/* Responsive */
 @media (max-width: 768px) {
   .grid,
   .loadingGrid {
@@ -388,5 +391,535 @@
 
   .bannerContent {
     padding: 16px 16px 20px;
+  }
+}
+
+/* Suggest button */
+.suggestWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.suggestBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 12px;
+  border: 1.5px dashed var(--selectedBorder);
+  background: transparent;
+  color: var(--suggestColor);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.suggestBtn:hover {
+  background: var(--selectedBg);
+  border-style: solid;
+}
+
+.suggestBtn i {
+  font-size: 19px;
+}
+
+/* Modal backdrop */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--navbar-h, 56px) + 8px) 12px 12px;
+  overflow: hidden;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal box */
+.modal {
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100vh - var(--navbar-h, 56px) - 40px);
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--cardButtonBorder);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: slideUp 0.22s ease;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal header */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0.9rem 0.6rem;
+  border-bottom: 1px solid var(--cardButtonBorder);
+}
+
+.modalHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modalIconWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--selectedBg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modalIconWrap i {
+  font-size: 19px;
+  color: var(--selectedBorder);
+}
+
+.modalTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--itemTitle);
+  margin: 0;
+}
+
+.modalSubtitle {
+  font-size: 12px;
+  color: var(--subtext);
+  margin: 2px 0 0;
+}
+
+.modalCloseBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--cardButtonBorder);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--subtext);
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+  flex-shrink: 0;
+}
+
+.modalCloseBtn:hover {
+  background: var(--cardButtonBorder);
+  color: var(--text);
+}
+
+.modalCloseBtn i {
+  font-size: 22px;
+}
+
+/* Rate-limit banner */
+.rateLimitBanner {
+  margin: 1rem 0.9rem 0 0.9rem;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: var(--cardIcon);
+  border: 1px solid var(--cardButtonBorder);
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  flex-shrink: 0;
+}
+
+.rateLimitBanner i {
+  font-size: 16px;
+  color: var(--subtext);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.rateLimitText {
+  font-size: 12px;
+  color: var(--subtext);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Modal body */
+.modalBody {
+  padding: 16px 20px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cardButtonBorder) transparent;
+}
+
+.modalBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background: var(--cardButtonBorder);
+  border-radius: 4px;
+}
+
+.modalBody::-webkit-scrollbar-thumb:hover {
+  background: var(--selectedBorder);
+}
+
+/* Form */
+.formRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--subtext);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.required {
+  color: #ef4444;
+  margin-inline-start: 2px;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 13px;
+  border-radius: 10px;
+  border: 1.5px solid var(--cardButtonBorder);
+  background: var(--cardIcon);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+  outline: none;
+  resize: none;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: var(--itemDescription);
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  border-color: var(--selectedBorder);
+  background: var(--selectedBg);
+}
+
+.formTextarea {
+  min-height: 76px;
+  line-height: 1.55;
+}
+
+/* Arabic name input */
+.formInputAr {
+  text-align: right;
+  font-family: inherit;
+}
+
+/* Region select */
+.selectWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.formSelect {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 36px 10px 13px;
+  border-radius: 10px;
+  border: 1.5px solid var(--cardButtonBorder);
+  background: var(--cardIcon);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+[dir="rtl"] .formSelect {
+  padding: 10px 13px 10px 36px;
+}
+
+.formSelect:focus {
+  border-color: var(--selectedBorder);
+  background: var(--selectedBg);
+}
+
+.formSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.formSelect option {
+  background: var(--card);
+  color: var(--text);
+}
+
+.selectChevron {
+  position: absolute;
+  right: 12px;
+  font-size: 16px;
+  color: var(--subtext);
+  pointer-events: none;
+}
+
+[dir="rtl"] .selectChevron {
+  right: auto;
+  left: 12px;
+}
+
+/* Char counter */
+.charCounter {
+  font-size: 11px;
+  color: var(--itemDescription);
+  text-align: end;
+  margin-bottom: 0;
+}
+
+/* Error */
+.formError {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+/* Modal footer */
+.modalFooter {
+  padding: 12px 20px 20px;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--cardButtonBorder);
+}
+
+[dir="rtl"] .modalFooter {
+  flex-direction: row-reverse;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 11px;
+  border-radius: 11px;
+  border: 1.5px solid var(--cardButtonBorder);
+  background: transparent;
+  color: var(--subtext);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s ease;
+}
+
+.cancelBtn:hover {
+  background: var(--cardButtonBorder);
+}
+
+.submitBtn {
+  flex: 2;
+  padding: 11px;
+  border-radius: 11px;
+  border: none;
+  background: var(--buttonBackground);
+  color: var(--buttonTextColor);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: opacity 0.18s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.submitBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.submitBtn i {
+  font-size: 17px;
+}
+
+/* Centered states (success / blocked) */
+.centeredBody {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.stateIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stateIcon.success {
+  background: var(--selectedBg);
+}
+
+.stateIcon.success i {
+  font-size: 28px;
+  color: var(--selectedBorder);
+}
+
+.stateIcon.blocked {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.stateIcon.blocked i {
+  font-size: 26px;
+  color: #ef4444;
+}
+
+.stateTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--itemTitle);
+  margin: 0;
+}
+
+.stateDesc {
+  font-size: 13px;
+  color: var(--subtext);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cooldownTimer {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--selectedBorder);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.closeOnlyBtn {
+  padding: 10px 28px;
+  border-radius: 11px;
+  border: 1.5px solid var(--cardButtonBorder);
+  background: transparent;
+  color: var(--subtext);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  margin-top: 4px;
+  transition: background 0.18s ease;
+}
+
+.closeOnlyBtn:hover {
+  background: var(--cardButtonBorder);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .modalBackdrop {
+    align-items: center;
+    padding: calc(var(--navbar-h, 56px) + 6px) 8px 8px;
+  }
+
+  .modal {
+    max-width: 100%;
+    border-radius: 16px;
+    max-height: calc(100vh - var(--navbar-h, 56px) - 24px);
+  }
+
+  .modalHeader {
+    padding: 14px 16px 12px;
+  }
+
+  .modalTitle {
+    font-size: 14px;
+  }
+
+  .modalSubtitle {
+    font-size: 11px;
+  }
+
+  .rateLimitBanner {
+    margin: 12px 10px 0;
+    padding: 9px 11px;
+  }
+
+  .modalBody {
+    padding: 14px 10px 4px;
+    gap: 11px;
+  }
+
+  .modalFooter {
+    padding: 10px 16px 16px;
+  }
+
+  .centeredBody {
+    padding: 24px 16px;
   }
 }

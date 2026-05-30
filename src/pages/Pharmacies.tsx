@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../context/language/useLanguage";
@@ -6,6 +6,8 @@ import { supabaseClient } from "../services/supabase";
 import { isOpenNow, getScheduleStatus } from "../utils/isOpen";
 import type { Schedule, ScheduleStatus } from "../utils/isOpen";
 import styles from "../styles/pages-style/Pharmacies.module.css";
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 type Pharmacy = {
   id: string;
@@ -35,7 +37,17 @@ type City = {
   image?: string | null;
 };
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+
 const ITEMS_PER_PAGE = 12;
+
+// Rate-limit config
+const RL_KEY = "dawamz_pharma_suggest_rl";
+const MAX_PER_DAY = 2;
+const COOLDOWN_MS = 10 * 60 * 1000;
+const WINDOW_MS = 24 * 60 * 60 * 1000;
+
+// ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const translations = {
   ar: {
@@ -165,6 +177,108 @@ const translations = {
   },
 };
 
+const suggestTx = {
+  ar: {
+    modalTitle: "اقتراح صيدلية",
+    modalSubtitle: "ساعدنا في إضافة صيدليات جديدة",
+    name: "اسم الصيدلية",
+    namePh: "مثال: صيدلية النور",
+    address: "العنوان",
+    addressPh: "الشارع أو الحي…",
+    phone: "رقم الهاتف",
+    phonePh: "مثال: 0600000000",
+    city: "المدينة",
+    cityPh: "اختر المدينة…",
+    citiesLoading: "جارٍ تحميل المدن…",
+    note: "ملاحظات",
+    notePh: "أي معلومات إضافية مفيدة…",
+    cancel: "إلغاء",
+    send: "إرسال",
+    sending: "جارٍ الإرسال…",
+    rateLimitMsg:
+      "للحد من الإرسال المتكرر، يُسمح بـ اقتراحَين كل 24 ساعة مع انتظار 10 دقائق بين كل إرسال.",
+    successTitle: "شكراً لك!",
+    successDesc: "تم استلام اقتراحك وسنراجعه في أقرب وقت.",
+    blockedDailyTitle: "وصلت إلى الحد اليومي",
+    blockedDailyDesc:
+      "يُسمح بـ اقتراحَين كحد أقصى كل 24 ساعة. يُرجى المحاولة لاحقاً.",
+    blockedCooldownTitle: "يرجى الانتظار قليلاً",
+    blockedCooldownDesc:
+      "يجب الانتظار 10 دقائق بين كل اقتراح حتى لا يُعدّ إرسالاً مكرراً. الوقت المتبقي:",
+    requiredName: "اسم الصيدلية مطلوب",
+    requiredCity: "يرجى اختيار المدينة",
+    submitError: "حدث خطأ. يُرجى المحاولة مرة أخرى.",
+    close: "إغلاق",
+  },
+  fr: {
+    modalTitle: "Suggérer une pharmacie",
+    modalSubtitle: "Aidez-nous à enrichir la liste",
+    name: "Nom de la pharmacie",
+    namePh: "Ex : Pharmacie Al Nour",
+    address: "Adresse",
+    addressPh: "Rue ou quartier…",
+    phone: "Téléphone",
+    phonePh: "Ex : 0600000000",
+    city: "Ville",
+    cityPh: "Choisir une ville…",
+    citiesLoading: "Chargement des villes…",
+    note: "Remarques",
+    notePh: "Toute information utile supplémentaire…",
+    cancel: "Annuler",
+    send: "Envoyer",
+    sending: "Envoi…",
+    rateLimitMsg:
+      "Pour éviter les doublons, vous êtes limité à 2 suggestions par 24 h avec un délai de 10 min entre chaque envoi.",
+    successTitle: "Merci !",
+    successDesc: "Votre suggestion a été reçue et sera examinée prochainement.",
+    blockedDailyTitle: "Limite journalière atteinte",
+    blockedDailyDesc:
+      "Vous pouvez envoyer au maximum 2 suggestions par 24 h. Réessayez plus tard.",
+    blockedCooldownTitle: "Patientez un moment",
+    blockedCooldownDesc:
+      "Un délai de 10 min est requis entre chaque suggestion pour éviter les envois en double. Temps restant :",
+    requiredName: "Le nom de la pharmacie est requis",
+    requiredCity: "Veuillez sélectionner une ville",
+    submitError: "Une erreur s'est produite. Veuillez réessayer.",
+    close: "Fermer",
+  },
+  en: {
+    modalTitle: "Suggest a pharmacy",
+    modalSubtitle: "Help us grow the directory",
+    name: "Pharmacy name",
+    namePh: "e.g. Al Nour Pharmacy",
+    address: "Address",
+    addressPh: "Street or neighborhood…",
+    phone: "Phone number",
+    phonePh: "e.g. 0600000000",
+    city: "City",
+    cityPh: "Select a city…",
+    citiesLoading: "Loading cities…",
+    note: "Notes",
+    notePh: "Any additional helpful information…",
+    cancel: "Cancel",
+    send: "Send",
+    sending: "Sending…",
+    rateLimitMsg:
+      "To avoid duplicates, you can submit up to 2 suggestions every 24 hours with a 10-minute cooldown between each submission.",
+    successTitle: "Thank you!",
+    successDesc:
+      "Your suggestion has been received and will be reviewed shortly.",
+    blockedDailyTitle: "Daily limit reached",
+    blockedDailyDesc:
+      "You can send at most 2 suggestions every 24 hours. Please try again later.",
+    blockedCooldownTitle: "Please wait a moment",
+    blockedCooldownDesc:
+      "A 10-minute cooldown between suggestions helps us avoid duplicates. Time remaining:",
+    requiredName: "Pharmacy name is required",
+    requiredCity: "Please select a city",
+    submitError: "Something went wrong. Please try again.",
+    close: "Close",
+  },
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
 const formatDate = (dateStr: string, language: string) => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
@@ -173,6 +287,365 @@ const formatDate = (dateStr: string, language: string) => {
     { day: "numeric", month: "short" },
   );
 };
+interface RLRecord {
+  timestamps: number[];
+}
+
+type RLStatus =
+  | { allowed: true }
+  | { allowed: false; reason: "daily"; resetAt: number }
+  | { allowed: false; reason: "cooldown"; unlocksAt: number };
+
+function readRL(): RLRecord {
+  try {
+    const r = localStorage.getItem(RL_KEY);
+    if (r) return JSON.parse(r);
+  } catch {
+    /**/
+  }
+  return { timestamps: [] };
+}
+
+function writeRL(rec: RLRecord) {
+  localStorage.setItem(RL_KEY, JSON.stringify(rec));
+}
+
+function checkRL(): RLStatus {
+  const now = Date.now();
+  const rec = readRL();
+  const recent = rec.timestamps.filter((ts) => now - ts < WINDOW_MS);
+  writeRL({ timestamps: recent });
+  if (recent.length >= MAX_PER_DAY)
+    return {
+      allowed: false,
+      reason: "daily",
+      resetAt: Math.min(...recent) + WINDOW_MS,
+    };
+  if (recent.length > 0) {
+    const last = Math.max(...recent);
+    if (now - last < COOLDOWN_MS)
+      return {
+        allowed: false,
+        reason: "cooldown",
+        unlocksAt: last + COOLDOWN_MS,
+      };
+  }
+  return { allowed: true };
+}
+
+function recordSubmission() {
+  const rec = readRL();
+  rec.timestamps.push(Date.now());
+  writeRL(rec);
+}
+
+function fmtCountdown(ms: number) {
+  const s = Math.ceil(ms / 1000);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+// ─── SuggestPharmacyModal ─────────────────────────────────────────────────────
+
+function SuggestPharmacyModal({
+  language,
+  isRTL,
+  onClose,
+}: {
+  language: "ar" | "fr" | "en";
+  isRTL: boolean;
+  onClose: () => void;
+}) {
+  const tx = suggestTx[language] ?? suggestTx.en;
+
+  const [step, setStep] = useState<"form" | "success" | "blocked">(() => {
+    const s = checkRL();
+    return s.allowed ? "form" : "blocked";
+  });
+
+  // Form fields
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [note, setNote] = useState("");
+
+  // Validation state
+  const [nameError, setNameError] = useState("");
+  const [cityError, setCityError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Rate-limit state
+  const [rlStatus, setRlStatus] = useState<RLStatus>(() => checkRL());
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Lock body scroll while mounted
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  // Countdown timer for cooldown
+  const startCountdown = useCallback((unlocksAt: number) => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setCountdown(unlocksAt - Date.now());
+    timerRef.current = setInterval(() => {
+      const remaining = unlocksAt - Date.now();
+      if (remaining <= 0) {
+        clearInterval(timerRef.current!);
+        setCountdown(0);
+        setRlStatus({ allowed: true });
+        setStep("form");
+      } else {
+        setCountdown(remaining);
+      }
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    if (rlStatus.allowed === false && rlStatus.reason === "cooldown") {
+      startCountdown(rlStatus.unlocksAt);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  async function handleSubmit() {
+    let valid = true;
+    if (!name.trim()) {
+      setNameError(tx.requiredName);
+      valid = false;
+    }
+    if (!city.trim()) {
+      setCityError(tx.requiredCity);
+      valid = false;
+    }
+    if (!valid) return;
+
+    const status = checkRL();
+    if (!status.allowed) {
+      setRlStatus(status);
+      setStep("blocked");
+      if (status.reason === "cooldown") startCountdown(status.unlocksAt);
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const { error: dbErr } = await supabaseClient
+        .from("pharmacy_suggestions")
+        .insert({
+          name: name.trim(),
+          city: city.trim(),
+          address: address.trim() || null,
+          phone: phone.trim() || null,
+          note: note.trim() || null,
+        });
+      if (dbErr) throw dbErr;
+      recordSubmission();
+      setStep("success");
+    } catch {
+      setSubmitError(tx.submitError);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div
+      className={styles.modalBackdrop}
+      onClick={onClose}
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className={styles.modalHeader}>
+          <div className={styles.modalHeaderLeft}>
+            <div className={styles.modalIconWrap}>
+              <i className="ion-ios-medkit" />
+            </div>
+            <div>
+              <p className={styles.modalTitle}>{tx.modalTitle}</p>
+              <p className={styles.modalSubtitle}>{tx.modalSubtitle}</p>
+            </div>
+          </div>
+          <button
+            className={styles.modalCloseBtn}
+            onClick={onClose}
+            aria-label={tx.close}
+          >
+            <i className="ion-ios-close" />
+          </button>
+        </div>
+
+        {/* Success state */}
+        {step === "success" && (
+          <div className={styles.centeredBody}>
+            <div className={`${styles.stateIcon} ${styles.success}`}>
+              <i className="ion-ios-checkmark-circle" />
+            </div>
+            <p className={styles.stateTitle}>{tx.successTitle}</p>
+            <p className={styles.stateDesc}>{tx.successDesc}</p>
+            <button className={styles.closeOnlyBtn} onClick={onClose}>
+              {tx.close}
+            </button>
+          </div>
+        )}
+
+        {/* Blocked state */}
+        {step === "blocked" && (
+          <div className={styles.centeredBody}>
+            <div className={`${styles.stateIcon} ${styles.blocked}`}>
+              <i className="ion-ios-time" />
+            </div>
+            {rlStatus.allowed === false && rlStatus.reason === "daily" && (
+              <>
+                <p className={styles.stateTitle}>{tx.blockedDailyTitle}</p>
+                <p className={styles.stateDesc}>{tx.blockedDailyDesc}</p>
+              </>
+            )}
+            {rlStatus.allowed === false && rlStatus.reason === "cooldown" && (
+              <>
+                <p className={styles.stateTitle}>{tx.blockedCooldownTitle}</p>
+                <p className={styles.stateDesc}>{tx.blockedCooldownDesc}</p>
+                <p className={styles.cooldownTimer}>
+                  {fmtCountdown(countdown)}
+                </p>
+              </>
+            )}
+            <button className={styles.closeOnlyBtn} onClick={onClose}>
+              {tx.close}
+            </button>
+          </div>
+        )}
+
+        {/* Form */}
+        {step === "form" && (
+          <>
+            {/* Rate-limit notice */}
+            <div className={styles.rateLimitBanner}>
+              <i className="ion-ios-information-circle-outline" />
+              <p className={styles.rateLimitText}>{tx.rateLimitMsg}</p>
+            </div>
+
+            <div className={styles.modalBody}>
+              {/* Name — required */}
+              <div className={styles.formRow}>
+                <label className={styles.formLabel}>
+                  {tx.name}
+                  <span className={styles.required}>*</span>
+                </label>
+                <input
+                  className={styles.formInput}
+                  value={name}
+                  maxLength={100}
+                  placeholder={tx.namePh}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setNameError("");
+                  }}
+                />
+                {nameError && <p className={styles.formError}>{nameError}</p>}
+                <p className={styles.charCounter}>{name.length}/100</p>
+              </div>
+
+              {/* Address — optional */}
+              <div className={styles.formRow}>
+                <label className={styles.formLabel}>{tx.address}</label>
+                <input
+                  className={styles.formInput}
+                  value={address}
+                  maxLength={200}
+                  placeholder={tx.addressPh}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+                <p className={styles.charCounter}>{address.length}/200</p>
+              </div>
+
+              {/* Phone — optional */}
+              <div className={styles.formRow}>
+                <label className={styles.formLabel}>{tx.phone}</label>
+                <input
+                  className={styles.formInput}
+                  value={phone}
+                  maxLength={20}
+                  placeholder={tx.phonePh}
+                  inputMode="tel"
+                  type="tel"
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+
+              {/* City — required */}
+              <div className={styles.formRow}>
+                <label className={styles.formLabel}>
+                  {tx.city}
+                  <span className={styles.required}>*</span>
+                </label>
+                <input
+                  className={styles.formInput}
+                  value={city}
+                  maxLength={100}
+                  placeholder={tx.cityPh}
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    setCityError("");
+                  }}
+                />
+                {cityError && <p className={styles.formError}>{cityError}</p>}
+              </div>
+
+              {/* Note — optional */}
+              <div className={styles.formRow}>
+                <label className={styles.formLabel}>{tx.note}</label>
+                <textarea
+                  className={styles.formTextarea}
+                  value={note}
+                  maxLength={300}
+                  placeholder={tx.notePh}
+                  onChange={(e) => setNote(e.target.value)}
+                />
+                <p className={styles.charCounter}>{note.length}/300</p>
+              </div>
+
+              {submitError && <p className={styles.formError}>{submitError}</p>}
+              <div style={{ height: 8, flexShrink: 0 }} />
+            </div>
+
+            {/* Footer */}
+            <div className={styles.modalFooter}>
+              <button className={styles.cancelBtn} onClick={onClose}>
+                {tx.cancel}
+              </button>
+              <button
+                className={styles.submitBtn}
+                onClick={handleSubmit}
+                disabled={submitting}
+              >
+                {submitting ? (
+                  tx.sending
+                ) : (
+                  <>
+                    <i className="ion-ios-send" />
+                    {tx.send}
+                  </>
+                )}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Pharmacies Page ──────────────────────────────────────────────────────────
 
 export default function Pharmacies() {
   const { regionSlug, citySlug } = useParams();
@@ -185,6 +658,7 @@ export default function Pharmacies() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "night" | "oncall">("all");
   const [currentPage, setCurrentPage] = useState(1);
+  const [showSuggestModal, setShowSuggestModal] = useState(false);
 
   const text = translations[language] ?? translations.en;
 
@@ -226,6 +700,7 @@ export default function Pharmacies() {
     fetchData();
   }, [citySlug]);
 
+  // Localized field accessors
   const getName = (p: Pharmacy) => (language === "ar" ? p.name_ar : p.name);
   const getAddress = (p: Pharmacy) =>
     language === "ar" ? p.address_ar : p.address;
@@ -319,6 +794,37 @@ export default function Pharmacies() {
     return null;
   };
 
+  const getEmptyState = () => {
+    if (search.length > 0)
+      return {
+        icon: "ion-ios-search",
+        title: text.notFoundSearch,
+        sub: text.notFoundSearchSub,
+        showSuggest: true,
+      };
+    if (filter === "night")
+      return {
+        icon: "ion-ios-moon",
+        title: text.noNightPharmacies,
+        sub: text.noNightPharmaciesSub,
+        showSuggest: false,
+      };
+    if (filter === "oncall")
+      return {
+        icon: "ion-ios-pulse",
+        title: text.noOnCallPharmacies,
+        sub: text.noOnCallPharmaciesSub,
+        showSuggest: false,
+      };
+    return {
+      icon: "ion-ios-medkit",
+      title: text.noPharmacies,
+      sub: text.noPharmaciesSub,
+      showSuggest: false,
+    };
+  };
+
+  // Filtering + pagination
   const filtered = pharmacies
     .filter((p) => {
       if (filter === "night") return p.is_night_pharmacy;
@@ -331,41 +837,6 @@ export default function Pharmacies() {
         getAddress(p).toLowerCase().includes(search.toLowerCase()),
     );
 
-  // Resolve empty state content based on search + filter
-  const getEmptyState = () => {
-    if (search.length > 0) {
-      return {
-        icon: "ion-ios-search",
-        title: text.notFoundSearch,
-        sub: text.notFoundSearchSub,
-        showSuggest: true,
-      };
-    }
-    if (filter === "night") {
-      return {
-        icon: "ion-ios-moon",
-        title: text.noNightPharmacies,
-        sub: text.noNightPharmaciesSub,
-        showSuggest: false,
-      };
-    }
-    if (filter === "oncall") {
-      return {
-        icon: "ion-ios-pulse",
-        title: text.noOnCallPharmacies,
-        sub: text.noOnCallPharmaciesSub,
-        showSuggest: false,
-      };
-    }
-    return {
-      icon: "ion-ios-medkit",
-      title: text.noPharmacies,
-      sub: text.noPharmaciesSub,
-      showSuggest: false,
-    };
-  };
-
-  // Pagination
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginatedItems = filtered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
@@ -380,7 +851,6 @@ export default function Pharmacies() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Build page number array with ellipsis
   const getPageNumbers = () => {
     if (totalPages <= 7)
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -411,6 +881,7 @@ export default function Pharmacies() {
     return pages;
   };
 
+  // Loading state
   if (loading) {
     return (
       <div className={styles.loadingPage} dir={isRTL ? "rtl" : "ltr"}>
@@ -424,6 +895,7 @@ export default function Pharmacies() {
     );
   }
 
+  // Not found state
   if (!city) {
     return (
       <div className={styles.notFound} dir={isRTL ? "rtl" : "ltr"}>
@@ -455,6 +927,7 @@ export default function Pharmacies() {
         />
         {city.image && <meta property="og:image" content={city.image} />}
       </Helmet>
+
       {/* Banner */}
       <div className={styles.banner}>
         {city.image && (
@@ -527,23 +1000,21 @@ export default function Pharmacies() {
         ))}
       </div>
 
-      {/* Grid */}
+      {/* Pharmacy grid */}
       <section className={styles.listSection}>
         {filtered.length === 0 ? (
           <div className={styles.empty}>
-            <div className={styles.emptyIconWrap}>
-              <i className={emptyState.icon} />
-            </div>
+            <i className={emptyState.icon} />
             <p className={styles.emptyTitle}>{emptyState.title}</p>
             <p className={styles.emptySub}>{emptyState.sub}</p>
             {emptyState.showSuggest && (
-              <a
-                href="mailto:contact@dawamz.com?subject=Suggestion pharmacie"
+              <button
                 className={styles.emptySuggest}
+                onClick={() => setShowSuggestModal(true)}
               >
                 <i className="ion-ios-add-circle-outline" />
                 <span>{text.suggestBtn}</span>
-              </a>
+              </button>
             )}
           </div>
         ) : (
@@ -562,7 +1033,6 @@ export default function Pharmacies() {
 
                 return (
                   <div key={pharmacy.id} className={styles.card}>
-                    {/* ── Header: badge left, pills + name right ── */}
                     <div className={styles.cardHeader}>
                       <div
                         className={styles.statusBadge}
@@ -589,7 +1059,6 @@ export default function Pharmacies() {
 
                     <div className={styles.cardDivider} />
 
-                    {/* ── Info block 1: address + phone ── */}
                     <div className={styles.infoBlock}>
                       <div className={styles.cardRow}>
                         <span
@@ -615,7 +1084,6 @@ export default function Pharmacies() {
 
                     <div className={styles.cardDivider} />
 
-                    {/* ── Info block 2: schedule data ── */}
                     <div className={styles.infoBlock}>
                       {showDutyPeriod && (
                         <div className={styles.cardRow}>
@@ -628,7 +1096,6 @@ export default function Pharmacies() {
                           </div>
                         </div>
                       )}
-
                       <div className={styles.cardRow}>
                         <span
                           className={styles.scheduleText}
@@ -646,7 +1113,6 @@ export default function Pharmacies() {
                           />
                         </div>
                       </div>
-
                       {warningBanner && (
                         <div className={styles.warningBanner}>
                           <span className={styles.warningText}>
@@ -657,7 +1123,6 @@ export default function Pharmacies() {
                       )}
                     </div>
 
-                    {/* ── Detail button ── */}
                     <button
                       className={styles.detailBtn}
                       onClick={() => {
@@ -694,7 +1159,6 @@ export default function Pharmacies() {
                       className={`ion-ios-arrow-${isRTL ? "forward" : "back"}`}
                     />
                   </button>
-
                   {getPageNumbers().map((p, idx) =>
                     p === "..." ? (
                       <span
@@ -713,7 +1177,6 @@ export default function Pharmacies() {
                       </button>
                     ),
                   )}
-
                   <button
                     className={`${styles.pageBtn} ${styles.pageBtnNav}`}
                     onClick={() => goToPage(currentPage + 1)}
@@ -730,6 +1193,15 @@ export default function Pharmacies() {
           </>
         )}
       </section>
+
+      {/* Suggest pharmacy modal */}
+      {showSuggestModal && (
+        <SuggestPharmacyModal
+          language={language}
+          isRTL={isRTL}
+          onClose={() => setShowSuggestModal(false)}
+        />
+      )}
     </div>
   );
 }
