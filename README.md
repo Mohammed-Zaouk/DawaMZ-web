@@ -6,7 +6,7 @@ This is the **web version** of DawaMZ, a multilingual pharmacy finder available 
 | Platform | Repo | Status |
 |---|---|---|
 | 📱 Mobile (React Native + Expo) | [dawamz](https://github.com/Mohammed-Zaouk/DawaMZ) | Live on Android & iOS |
-| 🌐 Web (this repo) | [dawamz-website](https://github.com/your-username/dawamz-website) | Live at dawamz.com |
+| 🌐 Web (this repo) | [dawamz-web](https://github.com/Mohammed-Zaouk/DawaMZ-web) | Live at dawamz.com |
 
 Both platforms share the same Supabase backend — same data, same schedule logic, same multilingual content.
 
