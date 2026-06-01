@@ -1,12 +1,11 @@
 # DawaMZ — Web
-
 > Find the nearest open pharmacy in Morocco — right now.
 
 This is the **web version** of DawaMZ, a multilingual pharmacy finder available across two platforms:
 
 | Platform | Repo | Status |
 |---|---|---|
-| 📱 Mobile (React Native + Expo) | [dawamz-app](https://github.com/your-username/dawamz-app) | Live on Android & iOS |
+| 📱 Mobile (React Native + Expo) | [dawamz](https://github.com/Mohammed-Zaouk/DawaMZ) | Live on Android & iOS |
 | 🌐 Web (this repo) | [dawamz-website](https://github.com/your-username/dawamz-website) | Live at dawamz.com |
 
 Both platforms share the same Supabase backend — same data, same schedule logic, same multilingual content.
@@ -32,6 +31,7 @@ The web version focuses on discoverability (SEO, shareable pharmacy URLs) while 
 | Bundler | Vite |
 | Backend / DB | Supabase (PostgreSQL + RLS) |
 | Auth | Supabase Auth |
+| Maps | Google Maps (directions link) |
 | Styling | CSS Modules |
 | Routing | React Router v6 |
 | Deployment | Vercel |
@@ -44,7 +44,7 @@ The web version focuses on discoverability (SEO, shareable pharmacy URLs) while 
 - **Real-time open/closed status** — computed from weekly schedules, lunch breaks, night shifts, and on-call duty periods
 - **Multilingual** — Arabic, French, and English with full RTL support
 - **Region → City → Pharmacy** navigation with SEO-friendly slugs
-- **Admin panel** — protected route for managing regions, cities, and pharmacies
+- **Google Maps integration** — one-tap directions from any pharmacy page
 - **Pharmacy suggestions** — users can submit missing pharmacies with rate limiting
 
 ---
@@ -65,9 +65,6 @@ Create a `.env` file at the root:
 ```env
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_ADMIN_EMAIL=your_admin_email
-VITE_ADMIN_PATH=your_admin_path
-VITE_LOGIN_PATH=your_login_path
 ```
 
 > None of these values should ever be committed. The `.gitignore` already excludes all `.env` files.
@@ -78,19 +75,35 @@ VITE_LOGIN_PATH=your_login_path
 
 ```
 src/
-├── components/        # Shared UI components (Navbar, Footer, etc.)
-├── context/           # Language and theme context providers
+├── assets/
+├── components/
+│   ├── Background.tsx
+│   ├── Footer.tsx
+│   └── Navbar.tsx
+├── context/
+│   ├── language/
+│   └── theme/
 ├── pages/
-│   ├── legal/         # About, Contact, Privacy, Terms
-│   ├── xk72sat2/      # Admin login
-│   ├── zp9qpanel/     # Admin panel (Regions, Cities, Pharmacies)
+│   ├── legal/
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Privacy.tsx
+│   │   └── Terms.tsx
 │   ├── Home.tsx
 │   ├── Cities.tsx
 │   ├── Pharmacies.tsx
 │   └── PharmacyDetail.tsx
-├── services/          # Supabase client
-├── styles/            # CSS Modules
-└── utils/             # Schedule logic (isOpen, getScheduleStatus)
+├── services/
+│   └── supabase.ts
+├── styles/
+│   ├── components-style/
+│   ├── legal-styles/
+│   ├── pages-style/
+│   ├── global.css
+│   └── theme.css
+├── utils/                 # Schedule logic (isOpen, etc.)
+├── App.tsx
+└── main.tsx
 ```
 
 ---
@@ -107,7 +120,7 @@ src/
 
 ## Database
 
-Managed on Supabase with Row Level Security enabled on all tables. The public can only read pharmacy and city data. All write operations go through the admin panel and require authentication.
+Managed on Supabase with Row Level Security enabled on all tables. The public can only read pharmacy and city data.
 
 Key tables: `regions`, `cities`, `pharmacies`, `pharmacy_suggestions`
 
