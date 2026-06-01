@@ -101,6 +101,7 @@ type AutoState =
       regionSlug: string;
       citySlug: string;
       distance: string;
+      cityImage: string | null;
     };
 
 export default function Home() {
@@ -212,7 +213,7 @@ export default function Home() {
 
     const { data: cityData } = await supabaseClient
       .from("cities")
-      .select("id, slug, region_id")
+      .select("id, slug, region_id, image")
       .eq("id", nearest.city_id)
       .single();
 
@@ -243,6 +244,7 @@ export default function Home() {
       regionSlug: regionData.slug,
       citySlug: cityData.slug,
       distance: distStr,
+      cityImage: cityData.image ?? null, // add this
     });
 
     setTimeout(() => {
@@ -332,6 +334,7 @@ export default function Home() {
                   const dest = autoState.pharmacy.slug ?? autoState.pharmacy.id;
                   navigate(
                     `/${autoState.regionSlug}/${autoState.citySlug}/${dest}`,
+                    { state: { cityImage: autoState.cityImage } }, // add this
                   );
                 }}
               >
