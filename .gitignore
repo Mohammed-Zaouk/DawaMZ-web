@@ -40,3 +40,6 @@ desktop.ini
 # Cache
 .eslintcache
 .cache/
+
+#Scripts
+scripts/
