@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Background from "./components/Background";
@@ -23,6 +24,16 @@ import {
   RegionCreate,
   RegionEdit,
 } from "./pages/zp9qpanel/Regions";
+
+// ─── Scroll To Top ────────────────────────────────────────────────────────────
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 // ─── Public layout wrapper ────────────────────────────────────────────────────
 
@@ -55,45 +66,40 @@ export default function App() {
   const ADMIN_PATH = import.meta.env.VITE_ADMIN_PATH as string;
   const LOGIN_PATH = import.meta.env.VITE_LOGIN_PATH as string;
   return (
-    <Routes>
-      {/* ── Admin ── */}
-      <Route path={`/${LOGIN_PATH}`} element={<AdminLogin />} />
-      <Route path={`/${ADMIN_PATH}`} element={<AdminPanel />}>
-        <Route index element={<Navigate to="regions" replace />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* ── Admin ── */}
+        <Route path={`/${LOGIN_PATH}`} element={<AdminLogin />} />
+        <Route path={`/${ADMIN_PATH}`} element={<AdminPanel />}>
+          <Route index element={<Navigate to="regions" replace />} />
+          <Route path="regions" element={<RegionList />} />
+          <Route path="regions/create" element={<RegionCreate />} />
+          <Route path="regions/edit/:id" element={<RegionEdit />} />
+          <Route path="cities/create" element={<CityCreate />} />
+          <Route path="cities/edit/:id" element={<CityEdit />} />
+          <Route path="pharmacies" element={<PharmacyList />} />
+          <Route path="pharmacies/create" element={<PharmacyCreate />} />
+          <Route path="pharmacies/edit/:id" element={<PharmacyEdit />} />
+          <Route path="*" element={<Navigate to="regions" replace />} />
+        </Route>
 
-        {/* Regions */}
-        <Route path="regions" element={<RegionList />} />
-        <Route path="regions/create" element={<RegionCreate />} />
-        <Route path="regions/edit/:id" element={<RegionEdit />} />
-
-        {/* Cities — create/edit only (list lives inside RegionList) */}
-        <Route path="cities/create" element={<CityCreate />} />
-        <Route path="cities/edit/:id" element={<CityEdit />} />
-
-        {/* Pharmacies */}
-        <Route path="pharmacies" element={<PharmacyList />} />
-        <Route path="pharmacies/create" element={<PharmacyCreate />} />
-        <Route path="pharmacies/edit/:id" element={<PharmacyEdit />} />
-
-        {/* Fallback — redirect unknown admin paths back to regions */}
-        <Route path="*" element={<Navigate to="regions" replace />} />
-      </Route>
-
-      {/* ── Public ── */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/:regionSlug" element={<Cities />} />
-        <Route path="/:regionSlug/:citySlug" element={<Pharmacies />} />
-        <Route
-          path="/:regionSlug/:citySlug/:pharmacySlug"
-          element={<PharmacyDetail />}
-        />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+        {/* ── Public ── */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/:regionSlug" element={<Cities />} />
+          <Route path="/:regionSlug/:citySlug" element={<Pharmacies />} />
+          <Route
+            path="/:regionSlug/:citySlug/:pharmacySlug"
+            element={<PharmacyDetail />}
+          />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
