@@ -43,15 +43,20 @@ const translations = {
       },
       {
         title: "7. الموقع مجاني تماماً",
-        content: "الموقع مجاني 100٪ بدون إعلانات أو أي تكاليف.",
+        content: "الموقع مجاني 100٪ بدون أي تكاليف.",
       },
       {
-        title: "8. التغييرات على هذه السياسة",
+        title: "8. تحليل الاستخدام",
+        content:
+          "نستخدم Google Analytics لفهم كيفية استخدام الزوار لموقعنا. يجمع Google Analytics بيانات استخدام مجهولة الهوية مثل الصفحات المُزارة والوقت المُستغرق. تتم معالجة هذه البيانات بواسطة Google وفقاً لسياسة الخصوصية الخاصة بهم.",
+      },
+      {
+        title: "9. التغييرات على هذه السياسة",
         content:
           "قد نقوم بتحديث سياسة الخصوصية من وقت لآخر. سيتم إخطارك بأي تغييرات مهمة.",
       },
       {
-        title: "9. الاتصال بنا",
+        title: "10. الاتصال بنا",
         content:
           "إذا كان لديك أسئلة حول هذه السياسة، يمكنك التواصل معنا عبر صفحة التواصل.",
       },
@@ -65,7 +70,6 @@ const translations = {
     metaTitle: "Politique de confidentialité | DawaMZ",
     metaDesc:
       "Politique de confidentialité de DawaMZ — comment nous traitons vos données",
-
     sections: [
       {
         title: "1. Informations que nous collectons",
@@ -99,15 +103,20 @@ const translations = {
       },
       {
         title: "7. Le site est entièrement gratuit",
-        content: "Le site est 100 % gratuit sans publicités ni frais.",
+        content: "Le site est 100 % gratuit sans frais.",
       },
       {
-        title: "8. Modifications de cette politique",
+        title: "8. Analyse du trafic",
+        content:
+          "Nous utilisons Google Analytics pour comprendre comment les visiteurs utilisent notre site. Google Analytics collecte des données d'utilisation anonymes telles que les pages visitées et le temps passé. Ces données sont traitées par Google conformément à leur politique de confidentialité.",
+      },
+      {
+        title: "9. Modifications de cette politique",
         content:
           "Nous pouvons mettre à jour cette politique de confidentialité de temps en temps. Vous serez informé de tout changement important.",
       },
       {
-        title: "9. Nous contacter",
+        title: "10. Nous contacter",
         content:
           "Si vous avez des questions concernant cette politique, vous pouvez nous contacter via la page de contact.",
       },
@@ -121,7 +130,6 @@ const translations = {
     metaTitle: "Privacy Policy | DawaMZ",
     metaDesc:
       "DawaMZ privacy policy — how we handle your data when using the pharmacy finder",
-
     sections: [
       {
         title: "1. Information We Collect",
@@ -155,15 +163,20 @@ const translations = {
       },
       {
         title: "7. The Site is Completely Free",
-        content: "The site is 100% free with no ads or costs.",
+        content: "The site is 100% free with no costs.",
       },
       {
-        title: "8. Changes to This Policy",
+        title: "8. Analytics",
+        content:
+          "We use Google Analytics to understand how visitors use our site. Google Analytics collects anonymous usage data such as pages visited and time spent. This data is processed by Google in accordance with their privacy policy. You can opt out by using the Google Analytics Opt-out Browser Add-on.",
+      },
+      {
+        title: "9. Changes to This Policy",
         content:
           "We may update this privacy policy from time to time. You will be notified of any significant changes.",
       },
       {
-        title: "9. Contact Us",
+        title: "10. Contact Us",
         content:
           "If you have questions about this policy, you can contact us via the contact page.",
       },
