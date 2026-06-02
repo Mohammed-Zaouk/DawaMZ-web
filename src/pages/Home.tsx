@@ -244,7 +244,7 @@ export default function Home() {
       regionSlug: regionData.slug,
       citySlug: cityData.slug,
       distance: distStr,
-      cityImage: cityData.image ?? null, // add this
+      cityImage: cityData.image ?? null,
     });
 
     setTimeout(() => {
