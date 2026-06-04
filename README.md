@@ -1,18 +1,51 @@
 # DawaMZ — Web
+
 > Find the nearest open pharmacy in Morocco — right now.
 
 This is the **web version** of DawaMZ, a multilingual pharmacy finder available across two platforms:
 
-| Platform | Repo | Status |
-|---|---|---|
-| 📱 Mobile (React Native + Expo) | [dawamz](https://github.com/Mohammed-Zaouk/DawaMZ) | Live on Android & iOS |
-| 🌐 Web (this repo) | [dawamz-web](https://github.com/Mohammed-Zaouk/DawaMZ-web) | Live at dawamz.com |
+| Platform                        | Repo                                                       | Status                |
+| ------------------------------- | ---------------------------------------------------------- | --------------------- |
+| 📱 Mobile (React Native + Expo) | [dawamz](https://github.com/Mohammed-Zaouk/DawaMZ)         | Live on Android & iOS |
+| 🌐 Web (this repo)              | [dawamz-web](https://github.com/Mohammed-Zaouk/DawaMZ-web) | Live at dawamz.com    |
 
 Both platforms share the same Supabase backend — same data, same schedule logic, same multilingual content.
 
 The web version focuses on discoverability (SEO, shareable pharmacy URLs) while the mobile app handles the full native experience with offline support and notifications.
 
 **Live:** [dawamz.com](https://www.dawamz.com)
+
+---
+
+## How Data Gets Into the App
+
+Pharmacy and on-call schedule data reaches Supabase through two complementary approaches:
+
+### 🤖 Automated Scraping (Primary)
+
+A private Python scraper runs automatically via GitHub Actions on a daily schedule. It collects up-to-date on-call pharmacy data — cities, pharmacies, and full details — and pushes everything directly to Supabase.
+
+The scraper is kept private for security and privacy reasons, but its pipeline looks like this:
+
+```
+GitHub Actions (scheduled daily)
+  ↓
+scrapers/cities.py       → collect all cities
+  ↓
+scrapers/pharmacies.py   → for each city, collect pharmacies
+  ↓
+scrapers/details.py      → for each pharmacy, collect full details
+  ↓
+parsers/pharmacy.py      → clean and structure the data
+  ↓
+seeds/push.py            → push to Supabase 🚀
+```
+
+This keeps the database fresh without any manual intervention.
+
+### 🗺️ Manual Approach (Supplementary)
+
+For pharmacies or cities not covered by the scraper, data can be added manually through direct Supabase inserts or via the built-in suggestion system, where users can submit missing pharmacies directly from the website.
 
 ---
 
@@ -25,17 +58,17 @@ The web version focuses on discoverability (SEO, shareable pharmacy URLs) while 
 ![CSS Modules](https://img.shields.io/badge/CSS-Modules-000000?style=flat-square&logo=cssmodules&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
 
-| Layer | Choice |
-|---|---|
-| Framework | React 18 + TypeScript |
-| Bundler | Vite |
-| Backend / DB | Supabase (PostgreSQL + RLS) |
-| Auth | Supabase Auth |
-| Maps | Google Maps (directions link) |
-| Styling | CSS Modules |
-| Routing | React Router v6 |
-| Deployment | Vercel |
-| Icons | Ionicons v4 |
+| Layer        | Choice                        |
+| ------------ | ----------------------------- |
+| Framework    | React 18 + TypeScript         |
+| Bundler      | Vite                          |
+| Backend / DB | Supabase (PostgreSQL + RLS)   |
+| Auth         | Supabase Auth                 |
+| Maps         | Google Maps (directions link) |
+| Styling      | CSS Modules                   |
+| Routing      | React Router v6               |
+| Deployment   | Vercel                        |
+| Icons        | Ionicons v4                   |
 
 ---
 
@@ -110,10 +143,10 @@ src/
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start local dev server |
-| `npm run build` | Production build |
+| Command           | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start local dev server               |
+| `npm run build`   | Production build                     |
 | `npm run preview` | Preview the production build locally |
 
 ---
