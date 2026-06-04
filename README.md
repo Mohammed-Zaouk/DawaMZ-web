@@ -11,7 +11,7 @@ This is the **web version** of DawaMZ, a multilingual pharmacy finder available 
 
 Both platforms share the same Supabase backend — same data, same schedule logic, same multilingual content.
 
-The web version focuses on discoverability (SEO, shareable pharmacy URLs) while the mobile app handles the full native experience with offline support and notifications.
+The web version focuses on discoverability (SEO, shareable pharmacy URLs) while the mobile app handles the full native experience.
 
 **Live:** [dawamz.com](https://www.dawamz.com)
 
