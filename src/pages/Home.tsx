@@ -188,8 +188,6 @@ export default function Home() {
         isOpenNow(
           p.schedule as Parameters<typeof isOpenNow>[0],
           p.is_on_call ?? false,
-          p.duty_start ?? "",
-          p.duty_end ?? "",
           p.is_night_pharmacy ?? false,
         ),
       )

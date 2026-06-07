@@ -687,8 +687,6 @@ export default function Pharmacies() {
         isOpenNow(
           p.schedule,
           p.is_on_call ?? false,
-          p.duty_start ?? "",
-          p.duty_end ?? "",
           p.is_night_pharmacy ?? false,
         ),
       );
@@ -709,8 +707,6 @@ export default function Pharmacies() {
     const status = getScheduleStatus(
       p.schedule,
       p.is_on_call ?? false,
-      p.duty_start ?? "",
-      p.duty_end ?? "",
       p.is_night_pharmacy ?? false,
     );
     if (status.type === "open" && status.closingSoon)
@@ -730,8 +726,6 @@ export default function Pharmacies() {
     const status: ScheduleStatus = getScheduleStatus(
       p.schedule,
       p.is_on_call ?? false,
-      p.duty_start ?? "",
-      p.duty_end ?? "",
       p.is_night_pharmacy ?? false,
     );
     switch (status.type) {
@@ -785,8 +779,6 @@ export default function Pharmacies() {
     const status = getScheduleStatus(
       p.schedule,
       p.is_on_call ?? false,
-      p.duty_start ?? "",
-      p.duty_end ?? "",
       p.is_night_pharmacy ?? false,
     );
     if (status.type === "open" && status.closingSoon && status.nextSlot)

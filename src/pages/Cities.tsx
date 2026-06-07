@@ -660,8 +660,6 @@ export default function Cities() {
               p.schedule,
               p.is_on_call ?? false,
               p.duty_start ?? "",
-              p.duty_end ?? "",
-              p.is_night_pharmacy ?? false,
             );
           if (open) map[p.city_id].openCount += 1;
         }
