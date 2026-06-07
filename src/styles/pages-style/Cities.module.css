@@ -791,7 +791,7 @@
 }
 
 .submitBtn:hover:not(:disabled) {
-  opacity: 0.87;
+  opacity: 0.88;
 }
 
 .submitBtn:disabled {
