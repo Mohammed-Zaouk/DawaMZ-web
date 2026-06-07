@@ -41,15 +41,10 @@ export type ScheduleStatus =
 export function getScheduleStatus(
   schedule: Schedule | null,
   isOnCall: boolean,
-  dutyStart: string | null,
-  dutyEnd: string | null,
   isNightPharmacy: boolean,
 ): ScheduleStatus {
   if (isOnCall || isNightPharmacy) {
-    if (dutyStart === "24h" || dutyEnd === "24h") return { type: "always_open" };
-    else {
-      return { type: "always_open" };
-    }
+    return { type: "always_open" };
   }
 
   if (!schedule) return { type: "always_open" };
@@ -104,11 +99,9 @@ export function getScheduleStatus(
 export function isOpenNow(
   schedule: Schedule | null,
   isOnCall: boolean,
-  dutyStart: string,
-  dutyEnd: string,
   isNightPharmacy: boolean,
 ): boolean {
-  const status = getScheduleStatus(schedule, isOnCall, dutyStart, dutyEnd, isNightPharmacy);
+  const status = getScheduleStatus(schedule, isOnCall, isNightPharmacy);
   return (
     status.type === "always_open" ||
     status.type === "open" ||
