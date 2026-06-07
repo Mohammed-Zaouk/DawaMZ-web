@@ -297,8 +297,6 @@ export default function PharmacyDetail() {
   const status: ScheduleStatus = getScheduleStatus(
     pharmacy.schedule,
     pharmacy.is_on_call ?? false,
-    pharmacy.duty_start ?? "",
-    pharmacy.duty_end ?? "",
     pharmacy.is_night_pharmacy ?? false,
   );
 
