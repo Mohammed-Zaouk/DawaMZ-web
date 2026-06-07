@@ -41,28 +41,34 @@ const getTodayString = () => {
 export type ScheduleStatus =
   | { type: "always_open" }
   | {
-      type: "open";
-      slot: TimeRange;
-      closingSoon: boolean;
-      minsLeft: number;
-      nextSlot: TimeRange | null;
-    }
+    type: "open";
+    slot: TimeRange;
+    closingSoon: boolean;
+    minsLeft: number;
+    nextSlot: TimeRange | null;
+  }
   | { type: "lunch_break"; reopensAt: string }
   | { type: "closed"; opensAt: string; opensDay: string };
 
 export function getScheduleStatus(
   schedule: Schedule | null,
   isOnCall: boolean,
-  dutyStart: string,
-  dutyEnd: string,
+  dutyStart: string | null,
+  dutyEnd: string | null,
   isNightPharmacy: boolean,
 ): ScheduleStatus {
-  if ((isOnCall || isNightPharmacy) && dutyStart && dutyEnd) {
+  if (isOnCall || isNightPharmacy) {
     if (dutyStart === "24h" || dutyEnd === "24h") return { type: "always_open" };
-    const today = getTodayString();
-    if (today >= dutyStart && today <= dutyEnd) return { type: "always_open" };
-    if (today < dutyStart)
-      return { type: "closed", opensAt: dutyStart, opensDay: "duty" };
+
+    if (dutyStart && dutyEnd) {
+      const today = getTodayString();
+      if (today >= dutyStart && today <= dutyEnd) return { type: "always_open" };
+      if (today < dutyStart) {
+        return { type: "closed", opensAt: dutyStart, opensDay: "duty" };
+      }
+    } else {
+      return { type: "always_open" };
+    }
   }
 
   if (!schedule) return { type: "always_open" };
